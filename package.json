@@ -1,0 +1,37 @@
+{
+  "name": "plick-appshell",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "private": true,
+  "scripts": {
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "prebuild": "expo prebuild --clean",
+    "typecheck": "tsc --noEmit",
+    "doctor": "npx expo-doctor",
+    "build:dev": "eas build --profile development --platform all",
+    "build:preview": "eas build --profile preview --platform all",
+    "build:prod": "eas build --profile production --platform all",
+    "submit:prod": "eas submit --profile production --platform all"
+  },
+  "dependencies": {
+    "expo": "~57.0.8",
+    "expo-build-properties": "~57.0.7",
+    "expo-constants": "~57.0.7",
+    "expo-dev-client": "~57.0.8",
+    "expo-network": "~57.0.1",
+    "expo-splash-screen": "~57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-system-ui": "~57.0.1",
+    "expo-web-browser": "~57.0.2",
+    "react": "19.2.3",
+    "react-native": "0.86.0",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-webview": "13.16.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3"
+  }
+}

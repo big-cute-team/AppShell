@@ -1,0 +1,83 @@
+# 005. 스토어 등록과 제출
+
+**상태: ⚪ 대기** — 002(EAS 연결)와 004(에셋)가 끝난 뒤 진행합니다.
+
+## App Store (iOS)
+
+### 사전 준비
+
+- [ ] Apple Developer Program 가입 (연 $99, 법인이면 D-U-N-S 번호 필요 — 발급에 수 주 걸립니다)
+- [ ] App Store Connect에서 앱 레코드 생성
+      - 번들 ID `com.plick.app` 등록 (Certificates, Identifiers & Profiles)
+      - SKU, 기본 언어(한국어) 지정
+- [ ] `eas.json`의 `submit.production.ios` 플레이스홀더 채우기
+      | 키 | 값 |
+      | --- | --- |
+      | `appleId` | Apple 계정 이메일 |
+      | `ascAppId` | App Store Connect의 앱 ID (숫자) |
+      | `appleTeamId` | 10자 팀 ID |
+
+### 심사 자료
+
+- [ ] 스크린샷 — 6.7"(필수), 6.5", 5.5" iPhone. iPad 미지원이므로 iPad 스크린샷은 불필요
+      (`app.config.ts`에 `supportsTablet: false` 설정됨)
+- [ ] 앱 설명, 키워드, 프로모션 텍스트
+- [ ] 개인정보처리방침 URL — **필수**. 없으면 제출 자체가 안 됩니다
+- [ ] App Privacy(개인정보 수집 항목) 설문 — 웹에서 수집하는 것 기준으로 답변
+- [ ] 심사용 테스트 계정 (로그인이 필요한 앱이면 **필수**)
+- [ ] 수출 규정 — `ITSAppUsesNonExemptEncryption: false` 로 설정되어 있음.
+      HTTPS 외의 암호화를 쓴다면 이 값을 재검토
+
+### 제출
+
+```bash
+npm run build:prod
+npm run submit:prod
+```
+
+- [ ] TestFlight로 먼저 내부 테스트
+- [ ] 심사 제출
+
+## Google Play (Android)
+
+### 사전 준비
+
+- [ ] Google Play 개발자 계정 (1회 $25). 법인 계정은 D-U-N-S 및 신원 확인 필요
+- [ ] Play Console에서 앱 생성, 패키지명 `com.plick.app`
+- [ ] **첫 AAB는 Play Console에 수동 업로드** — Google 정책상 첫 릴리즈 이후에야
+      API 제출이 열립니다
+      ```bash
+      npm run build:prod   # AAB 다운로드 → 콘솔에 직접 업로드
+      ```
+- [ ] 서비스 계정 생성 후 JSON 키 발급
+      (Google Cloud Console → 서비스 계정 → Play Console에서 권한 부여)
+- [ ] `google-play-service-account.json`으로 저장 (`.gitignore`에 이미 포함)
+- [ ] 이후부터는 `npm run submit:prod`로 자동화
+
+### 심사 자료
+
+- [ ] 스토어 등록정보 — 아이콘 512×512, 그래픽 이미지 1024×500, 스크린샷 2장 이상
+- [ ] 개인정보처리방침 URL — **필수**
+- [ ] 데이터 보안 양식 (웹에서 수집하는 항목 기준)
+- [ ] 콘텐츠 등급 설문
+- [ ] 타겟 API 레벨 요건 확인 — Play는 매년 상향합니다.
+      Expo SDK 57 기본값이 현재 요건을 충족하는지 제출 시점에 재확인
+- [ ] 테스트 계정 (로그인 필요 시)
+
+### 트랙
+
+`eas.json`의 `submit.production.android.track`이 `internal`로 되어 있습니다.
+
+- [ ] internal → closed → production 순으로 올릴지, 바로 production으로 갈지 결정
+
+## 공통
+
+- [ ] 두 스토어의 앱 이름/설명/스크린샷을 일치시키기
+- [ ] 개인정보처리방침 페이지가 모바일 웹에 실제로 존재하는지 확인
+- [ ] 계정 삭제 경로 — 회원가입이 있는 앱은 **양쪽 스토어 모두 필수**입니다.
+      웹에 계정 삭제 기능이 없다면 먼저 만들어야 합니다
+
+## 참고
+
+- 빌드/제출 파이프라인 배경: [ADR-0003](../adr/0003-eas-build-and-remote-versioning.md)
+- 반려 리스크: [006](./006-review-risk-native-features.md)

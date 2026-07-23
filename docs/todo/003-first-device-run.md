@@ -24,12 +24,16 @@
       ```bash
       npm run ios
       ```
-- [ ] Android 에뮬레이터 — 기본 JDK가 24라 Gradle이 거부할 수 있습니다
+- [ ] Android — **JDK 21이 필수입니다** (2026-07-23 확인)
       ```bash
       export JAVA_HOME=$(/usr/libexec/java_home -v 21)
       npm run android
       ```
+      기본 JDK 24로 돌리면 `:expo-modules-core:configureCMakeDebug` 에서
+      `A restricted method in java.lang.System has been called` 로 실패합니다.
+      한 번 실패하면 CMake 캐시가 남으니 `rm -rf android` 후 다시 빌드하세요.
 - [ ] JDK 21을 기본으로 쓸지 결정하고 셸 프로필(`~/.zshrc`)에 반영
+      — 안 하면 새 터미널마다 위 `export`를 다시 쳐야 합니다
 
 > **이 체크리스트를 Expo Go로 닫지 마세요.** `react-native-webview`가 Expo Go에
 > 포함돼 있어 화면은 뜨지만, Expo Go는 별개의 앱이라 `app.config.ts`의 네이티브 설정을

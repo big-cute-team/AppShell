@@ -137,6 +137,9 @@ export function WebShell() {
           onContentProcessDidTerminate={() => setReloadKey((key) => key + 1)}
           // target="_blank" 링크도 onShouldStartLoadWithRequest를 타도록 강제합니다.
           setSupportMultipleWindows={false}
+          // 개발 빌드에서만 Safari 웹 인스펙터(Develop 메뉴)에 웹뷰를 노출합니다.
+          // iOS 16.4+는 isInspectable=true 가 아니면 인스펙터에 뜨지 않습니다.
+          webviewDebuggingEnabled={__DEV__}
           allowsBackForwardNavigationGestures
           pullToRefreshEnabled={PULL_TO_REFRESH}
           // 로그인 세션이 앱 재실행 후에도 유지되도록 쿠키를 공유합니다.

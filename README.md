@@ -236,6 +236,23 @@ npm run doctor         # 프로젝트 환경 점검
 **네이티브 설정을 바꿨는데 반영되지 않음**
 `npm run prebuild` 로 네이티브 프로젝트를 재생성한 뒤 다시 빌드하세요.
 
+**Android 빌드 실패 — `:expo-modules-core:configureCMakeDebug[...] FAILED`**
+```
+> WARNING: A restricted method in java.lang.System has been called
+```
+**JDK 24를 쓰고 있어서입니다.** React Native 0.86이 지원하는 건 JDK 17/21이고,
+JDK 24는 네이티브 접근 제한(JEP 472) 때문에 CMake 구성 단계에서 깨집니다.
+JDK 21로 바꾸고, 실패한 CMake 캐시가 남지 않도록 `android/`를 지운 뒤 다시 빌드하세요.
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+rm -rf android
+npm run android
+```
+
+매번 치기 싫으면 `~/.zshrc`에 위 `export` 줄을 넣으세요.
+설치된 JDK 목록은 `/usr/libexec/java_home -V` 로 확인합니다.
+
 **`ERR_CLEARTEXT_NOT_PERMITTED` / 로컬 `http://` 주소에서만 오류 화면**
 `.env`에 `ALLOW_CLEARTEXT_TRAFFIC=1`이 있는지 확인하고, **앱을 다시 설치**하세요.
 이 값은 AndroidManifest에 구워지므로 이미 설치된 앱에는 JS 리로드로 반영되지 않습니다.

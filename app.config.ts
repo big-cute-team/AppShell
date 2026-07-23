@@ -17,6 +17,18 @@ const VERSION = '1.0.0';
 /** 브랜드 컬러 — 스플래시 배경, 상태바 뒤 영역, 웹뷰 로딩 배경에 함께 쓰입니다. */
 const BACKGROUND_COLOR = '#FFFFFF';
 
+/**
+ * 로컬 개발 웹(`http://localhost:3001` 등)을 웹뷰에서 열기 위한 스위치.
+ *
+ * `.env`에 `ALLOW_CLEARTEXT_TRAFFIC=1`이 있을 때만 켜집니다.
+ * `.env`는 커밋되지 않고 EAS 클라우드 빌드에도 올라가지 않으므로,
+ * 스토어에 나가는 빌드는 자동으로 꺼진 상태(HTTPS 전용)가 됩니다.
+ *
+ * `EXPO_PUBLIC_` 접두사를 붙이지 않은 것은 의도적입니다 — 이 값은 빌드 시점에만
+ * 필요하고 JS 번들에 인라인될 이유가 없습니다.
+ */
+const ALLOW_CLEARTEXT = process.env.ALLOW_CLEARTEXT_TRAFFIC === '1';
+
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: APP_NAME,
@@ -33,8 +45,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supportsTablet: false,
     infoPlist: {
       // 웹뷰가 HTTPS만 로드하도록 강제합니다. HTTP 자원이 필요하면 여기서 예외를 여세요.
+      //
+      // NSAllowsLocalNetworking은 localhost/사설망(10.x, 192.168.x)에 한해 HTTP를 허용합니다.
+      // 공개 인터넷에는 여전히 HTTPS가 강제되므로 NSAllowsArbitraryLoads와 달리
+      // 심사에서 별도 소명을 요구받지 않습니다. 로컬 개발 웹을 띄우기 위해 켜 둡니다.
       NSAppTransportSecurity: {
         NSAllowsArbitraryLoads: false,
+        NSAllowsLocalNetworking: true,
       },
       // 웹에서 카메라/마이크/사진 접근을 쓰지 않는다면 아래 3개는 지워도 됩니다.
       NSCameraUsageDescription:
@@ -80,8 +97,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         // iOS 최소 지원 버전은 Expo SDK 기본값(16.4)을 따릅니다.
         // 더 높여야 하면 여기에 `ios: { deploymentTarget: '17.0' }` 를 추가하세요.
         android: {
-          // HTTPS만 허용. 사내 HTTP 스테이징이 필요하면 true로 바꾸세요.
-          usesCleartextTraffic: false,
+          // 기본은 HTTPS 전용. 로컬 개발 웹을 붙일 때만 `.env`의
+          // ALLOW_CLEARTEXT_TRAFFIC=1 로 켭니다(위 ALLOW_CLEARTEXT 주석 참고).
+          //
+          // 안드로이드는 iOS처럼 "로컬만 허용"을 표현할 수 없어 전역 스위치가 됩니다.
+          // 사내 HTTP 스테이징을 상시로 써야 한다면 network security config를
+          // 붙이는 config plugin이 필요합니다.
+          usesCleartextTraffic: ALLOW_CLEARTEXT,
         },
       },
     ],

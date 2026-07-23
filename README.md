@@ -122,6 +122,31 @@ const isApp = navigator.userAgent.includes('PlickApp');
 > EAS Build에서 쓰려면 `eas.json`의 프로파일에 `env`를 추가하거나
 > `eas env:create` 로 등록하세요.
 
+### 로컬 개발 웹에 붙이기
+
+내 컴퓨터에서 돌리는 개발 서버(`http://localhost:3001` 등)를 감싸려면 두 가지가 필요합니다.
+
+1. **플랫폼에 맞는 주소** — 에뮬레이터 안의 `localhost`는 에뮬레이터 자신입니다.
+
+   | 실행 환경 | `EXPO_PUBLIC_WEB_URL` |
+   | --- | --- |
+   | iOS 시뮬레이터 | `http://localhost:3001` |
+   | Android 에뮬레이터 | `http://10.0.2.2:3001` |
+   | 실기기 (같은 Wi-Fi) | `http://<맥의 LAN IP>:3001` — `ipconfig getifaddr en0` |
+
+2. **평문 HTTP 허용** — `.env`에 `ALLOW_CLEARTEXT_TRAFFIC=1`.
+   iOS는 `NSAllowsLocalNetworking`으로 로컬·사설망만 열려 있고,
+   이 플래그는 Android의 `usesCleartextTraffic`을 켭니다.
+
+```bash
+npx expo prebuild --clean   # .env 를 고쳤으면 네이티브 설정 재생성 필요
+npm run ios                 # 또는 npm run android
+```
+
+> `.env`는 커밋되지 않고 EAS 클라우드 빌드에도 올라가지 않으므로,
+> 스토어로 나가는 빌드는 자동으로 HTTPS 전용입니다.
+> 다만 **로컬에서 릴리즈 빌드를 만들 때는 플래그가 그대로 따라갑니다** — 빼고 만드세요.
+
 ### 앱 안에서 열릴 도메인 추가 (소셜 로그인 등)
 
 `src/config.ts`의 `INTERNAL_HOSTS`에 호스트를 추가합니다.

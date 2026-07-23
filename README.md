@@ -27,8 +27,10 @@ npm run ios       # 또는 npm run android
 npm start
 ```
 
-> `react-native-webview`는 네이티브 모듈이라 **Expo Go에서는 동작하지 않습니다.**
-> 반드시 `npm run ios` / `npm run android`(또는 EAS development 빌드)로 만든
+> **Expo Go로 검증하지 마세요.** `react-native-webview`가 Expo Go에 포함돼 있어
+> 화면은 뜨지만, Expo Go는 별개의 앱이라 `app.config.ts`의 네이티브 설정
+> (아이콘·스플래시·번들ID·스킴·권한·ATS/cleartext)을 하나도 반영하지 않습니다.
+> `npm run ios` / `npm run android`(또는 EAS development 빌드)로 만든
 > **개발 빌드(dev client)** 위에서 실행하세요.
 
 ---
@@ -122,6 +124,31 @@ const isApp = navigator.userAgent.includes('PlickApp');
 > EAS Build에서 쓰려면 `eas.json`의 프로파일에 `env`를 추가하거나
 > `eas env:create` 로 등록하세요.
 
+### 로컬 개발 웹에 붙이기
+
+내 컴퓨터에서 돌리는 개발 서버(`http://localhost:3001` 등)를 감싸려면 두 가지가 필요합니다.
+
+1. **플랫폼에 맞는 주소** — 에뮬레이터 안의 `localhost`는 에뮬레이터 자신입니다.
+
+   | 실행 환경 | `EXPO_PUBLIC_WEB_URL` |
+   | --- | --- |
+   | iOS 시뮬레이터 | `http://localhost:3001` |
+   | Android 에뮬레이터 | `http://10.0.2.2:3001` |
+   | 실기기 (같은 Wi-Fi) | `http://<맥의 LAN IP>:3001` — `ipconfig getifaddr en0` |
+
+2. **평문 HTTP 허용** — `.env`에 `ALLOW_CLEARTEXT_TRAFFIC=1`.
+   iOS는 `NSAllowsLocalNetworking`으로 로컬·사설망만 열려 있고,
+   이 플래그는 Android의 `usesCleartextTraffic`을 켭니다.
+
+```bash
+npx expo prebuild --clean   # .env 를 고쳤으면 네이티브 설정 재생성 필요
+npm run ios                 # 또는 npm run android
+```
+
+> `.env`는 커밋되지 않고 EAS 클라우드 빌드에도 올라가지 않으므로,
+> 스토어로 나가는 빌드는 자동으로 HTTPS 전용입니다.
+> 다만 **로컬에서 릴리즈 빌드를 만들 때는 플래그가 그대로 따라갑니다** — 빼고 만드세요.
+
 ### 앱 안에서 열릴 도메인 추가 (소셜 로그인 등)
 
 `src/config.ts`의 `INTERNAL_HOSTS`에 호스트를 추가합니다.
@@ -209,8 +236,30 @@ npm run doctor         # 프로젝트 환경 점검
 **네이티브 설정을 바꿨는데 반영되지 않음**
 `npm run prebuild` 로 네이티브 프로젝트를 재생성한 뒤 다시 빌드하세요.
 
-**`react-native-webview` 관련 오류 / Expo Go에서 빈 화면**
-Expo Go가 아니라 개발 빌드에서 실행해야 합니다 (`npm run ios` / `npm run android`).
+**Android 빌드 실패 — `:expo-modules-core:configureCMakeDebug[...] FAILED`**
+```
+> WARNING: A restricted method in java.lang.System has been called
+```
+**JDK 24를 쓰고 있어서입니다.** React Native 0.86이 지원하는 건 JDK 17/21이고,
+JDK 24는 네이티브 접근 제한(JEP 472) 때문에 CMake 구성 단계에서 깨집니다.
+JDK 21로 바꾸고, 실패한 CMake 캐시가 남지 않도록 `android/`를 지운 뒤 다시 빌드하세요.
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+rm -rf android
+npm run android
+```
+
+매번 치기 싫으면 `~/.zshrc`에 위 `export` 줄을 넣으세요.
+설치된 JDK 목록은 `/usr/libexec/java_home -V` 로 확인합니다.
+
+**`ERR_CLEARTEXT_NOT_PERMITTED` / 로컬 `http://` 주소에서만 오류 화면**
+`.env`에 `ALLOW_CLEARTEXT_TRAFFIC=1`이 있는지 확인하고, **앱을 다시 설치**하세요.
+이 값은 AndroidManifest에 구워지므로 이미 설치된 앱에는 JS 리로드로 반영되지 않습니다.
+
+**Expo Go에서는 되는데 개발 빌드에서 안 됨**
+Expo Go는 `app.config.ts`의 네이티브 설정을 반영하지 않고 평문 HTTP도 이미 허용돼 있어,
+검증 결과가 실제 앱과 다릅니다. 검증은 개발 빌드에서 하세요.
 
 **웹은 되는데 앱에서만 특정 링크가 안 열림**
 해당 도메인이 `INTERNAL_HOSTS`에 없어 인앱 브라우저로 넘어간 것입니다. 목록에 추가하세요.

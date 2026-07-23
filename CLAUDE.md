@@ -108,7 +108,18 @@ npx expo prebuild --no-install --clean
 남아 있으면 이후 설정 변경이 반영되지 않은 것처럼 보입니다.
 
 시뮬레이터 실행이 필요한 검증은 `npm run ios` / `npm run android`로 개발 빌드를 만들어야
-합니다. **Expo Go로는 검증할 수 없습니다** — `react-native-webview`가 포함되어 있지 않습니다.
+합니다. **Expo Go로는 검증할 수 없습니다.**
+
+`react-native-webview`는 Expo Go에 포함되어 있어 화면 자체는 뜹니다. 문제는 Expo Go가
+이미 빌드된 별개의 앱이라 **`app.config.ts`의 네이티브 설정을 전혀 반영하지 않는다**는 점입니다.
+아이콘·스플래시·번들ID·스킴·권한 문자열·ATS/cleartext 설정이 모두 Expo Go의 것입니다.
+
+특히 Expo Go는 개발 서버를 로드해야 하므로 **평문 HTTP가 이미 허용돼 있습니다.**
+그래서 `usesCleartextTraffic` 같은 설정은 Expo Go에서 **항상 통과한 것처럼 보입니다** —
+거짓 통과입니다. 네이티브 설정을 건드린 검증은 반드시 개발 빌드로 하세요.
+
+로컬 웹의 렌더링만 빠르게 훑어보는 용도로는 `npx expo start --go`가 유용합니다
+(`npm start`는 `--dev-client`가 붙어 있어 Expo Go로 붙지 않습니다).
 
 ## RN 0.86 관련 주의
 

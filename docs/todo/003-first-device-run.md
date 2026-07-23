@@ -31,8 +31,14 @@
       ```
 - [ ] JDK 21을 기본으로 쓸지 결정하고 셸 프로필(`~/.zshrc`)에 반영
 
-> `npm start`만으로는 안 됩니다. `react-native-webview`가 네이티브 모듈이라
-> Expo Go에서는 동작하지 않습니다. 개발 빌드가 반드시 필요합니다.
+> **이 체크리스트를 Expo Go로 닫지 마세요.** `react-native-webview`가 Expo Go에
+> 포함돼 있어 화면은 뜨지만, Expo Go는 별개의 앱이라 `app.config.ts`의 네이티브 설정을
+> 반영하지 않습니다. 아이콘·스플래시·번들ID·스킴·권한, 그리고 **평문 HTTP 허용 여부까지
+> 전부 Expo Go의 설정이 적용됩니다** — Expo Go는 개발 서버를 로드해야 하므로 HTTP가
+> 이미 허용돼 있어, cleartext 설정이 항상 통과한 것처럼 보입니다(거짓 통과).
+>
+> 로컬 웹이 폰 웹뷰에서 볼 만한지 훑는 용도로는 `npx expo start --go`가 유용합니다.
+> 아래 항목을 실제로 확인하려면 개발 빌드(`npm run android`)가 필요합니다.
 
 ## 체크리스트
 

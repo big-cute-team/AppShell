@@ -27,8 +27,10 @@ npm run ios       # 또는 npm run android
 npm start
 ```
 
-> `react-native-webview`는 네이티브 모듈이라 **Expo Go에서는 동작하지 않습니다.**
-> 반드시 `npm run ios` / `npm run android`(또는 EAS development 빌드)로 만든
+> **Expo Go로 검증하지 마세요.** `react-native-webview`가 Expo Go에 포함돼 있어
+> 화면은 뜨지만, Expo Go는 별개의 앱이라 `app.config.ts`의 네이티브 설정
+> (아이콘·스플래시·번들ID·스킴·권한·ATS/cleartext)을 하나도 반영하지 않습니다.
+> `npm run ios` / `npm run android`(또는 EAS development 빌드)로 만든
 > **개발 빌드(dev client)** 위에서 실행하세요.
 
 ---
@@ -234,8 +236,13 @@ npm run doctor         # 프로젝트 환경 점검
 **네이티브 설정을 바꿨는데 반영되지 않음**
 `npm run prebuild` 로 네이티브 프로젝트를 재생성한 뒤 다시 빌드하세요.
 
-**`react-native-webview` 관련 오류 / Expo Go에서 빈 화면**
-Expo Go가 아니라 개발 빌드에서 실행해야 합니다 (`npm run ios` / `npm run android`).
+**`ERR_CLEARTEXT_NOT_PERMITTED` / 로컬 `http://` 주소에서만 오류 화면**
+`.env`에 `ALLOW_CLEARTEXT_TRAFFIC=1`이 있는지 확인하고, **앱을 다시 설치**하세요.
+이 값은 AndroidManifest에 구워지므로 이미 설치된 앱에는 JS 리로드로 반영되지 않습니다.
+
+**Expo Go에서는 되는데 개발 빌드에서 안 됨**
+Expo Go는 `app.config.ts`의 네이티브 설정을 반영하지 않고 평문 HTTP도 이미 허용돼 있어,
+검증 결과가 실제 앱과 다릅니다. 검증은 개발 빌드에서 하세요.
 
 **웹은 되는데 앱에서만 특정 링크가 안 열림**
 해당 도메인이 `INTERNAL_HOSTS`에 없어 인앱 브라우저로 넘어간 것입니다. 목록에 추가하세요.

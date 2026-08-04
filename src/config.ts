@@ -20,11 +20,10 @@ export const INTERNAL_HOSTS: string[] = [
   hostOf(WEB_URL),
   // .env로 WEB_URL을 로컬 주소로 덮어써도 프로덕션 도메인은 항상 앱 안에서 열립니다.
   '.plick.co.kr',
-  // 소셜 로그인 등 웹뷰 안에서 처리해야 하는 도메인을 추가하세요.
-  // 'accounts.google.com',
-  // 'appleid.apple.com',
-  // 'nid.naver.com',
-  // 'kauth.kakao.com',
+  // 소셜 로그인 — 로그인 페이지가 웹뷰 밖으로 새면 세션이 앱으로 돌아오지 못합니다.
+  'kauth.kakao.com',
+  'accounts.kakao.com',
+  'accounts.google.com',
 ];
 
 /** 웹이 "앱에서 열렸는지"를 판별할 수 있도록 User-Agent 뒤에 붙이는 문자열. */

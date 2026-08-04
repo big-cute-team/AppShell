@@ -25,11 +25,13 @@
 
 - [x] 서브도메인을 쓴다면 `.plick.co.kr` 형태로 (앞의 `.`이 서브도메인 포함 의미) — 반영됨
 - [ ] CDN / 이미지 서버 도메인 (웹뷰가 직접 네비게이션하는 경우만. `<img>` 로딩은 무관)
-- [ ] 소셜 로그인 도메인 — 쓰는 것만
-      - 네이버 `nid.naver.com`
-      - 카카오 `kauth.kakao.com`, `accounts.kakao.com`
-      - 구글 `accounts.google.com`
-      - 애플 `appleid.apple.com`
+- [x] 소셜 로그인 도메인 — 카카오·구글 사용 확정, 반영됨 (2026-08-04)
+      - 카카오 `kauth.kakao.com`, `accounts.kakao.com` ✅
+      - 구글 `accounts.google.com` ✅
+      - (미사용) 네이버 `nid.naver.com`, 애플 `appleid.apple.com`
+      - ⚠️ 구글은 웹뷰 내 OAuth를 차단할 수 있음(`disallowed_useragent` 403).
+        실기기 확인 시 구글 로그인이 403이면 웹 쪽에서 카카오처럼 리다이렉트 방식이
+        아닌 SDK/커스텀탭 전환을 검토해야 함 — 발생 시 별도 TODO로 승격
 - [ ] PG/결제 도메인 (토스페이먼츠, 아임포트, KG이니시스 등 — 결제창이 웹뷰에서 떠야 함)
 - [ ] 본인인증(PASS/NICE) 도메인
 

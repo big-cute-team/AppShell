@@ -1,35 +1,37 @@
 # 001. 웹 URL과 도메인 설정
 
-**상태: 🔴 블로커** — 공개 주소가 아직 없습니다.
+**상태: 🟡 진행 중** — 프로덕션 주소 확정, 도메인 목록은 마저 채워야 합니다.
 
-> 2026-07-23 현재 로컬 개발 웹(`http://localhost:3001`)을 가리키도록 임시 설정되어 있습니다.
-> 덕분에 [003](./003-first-device-run.md)은 지금 진행할 수 있지만,
-> localhost는 개발 머신 밖에서 해석되지 않으므로 **클라우드 빌드로 남에게 넘기거나
-> 스토어에 제출할 수는 없습니다.** 공개 HTTPS 주소가 나오면 아래를 마저 채우세요.
+> 2026-08-04 프로덕션 주소가 `https://m.plick.co.kr`로 확정되어
+> `src/config.ts` 기본값과 `.env.example`에 반영했습니다.
+> `INTERNAL_HOSTS`에는 `.plick.co.kr`(서브도메인 포함)이 들어갔습니다.
+> 로컬 `.env`는 개발용으로 계속 localhost를 가리켜도 됩니다 —
+> 기본값이 프로덕션 주소라서 `.env` 없이 빌드해도 스토어 제출이 가능합니다.
 
 ## 해야 할 일
 
-- [ ] 감쌀 모바일 웹의 **실제 주소** 확정 (프로덕션 / 스테이징 각각)
-- [ ] `.env` 생성 후 `EXPO_PUBLIC_WEB_URL` 채우기
-      ```bash
-      cp .env.example .env
-      ```
-- [ ] `src/config.ts`의 기본값(`'https://example.com'`)을 프로덕션 주소로 교체
+- [x] 감쌀 모바일 웹의 **실제 주소** 확정 — 프로덕션 `https://m.plick.co.kr` (2026-08-04)
+- [ ] 스테이징 주소 확정 (있다면 — 빌드 프로파일별 `EXPO_PUBLIC_WEB_URL`로 주입)
+- [x] `.env` 생성 후 `EXPO_PUBLIC_WEB_URL` 채우기 — 개발용 localhost로 운용 중
+- [x] `src/config.ts`의 기본값(`'https://example.com'`)을 프로덕션 주소로 교체
       — `.env` 없이 빌드됐을 때의 폴백입니다
 - [ ] `src/config.ts`의 `INTERNAL_HOSTS`에 앱 안에서 열려야 할 도메인 추가
+      — `.plick.co.kr`는 반영됨. 소셜 로그인/결제/본인인증 도메인은 아래 목록 참고
 
 ## `INTERNAL_HOSTS`에 넣어야 하는 것들
 
 기본으로는 `WEB_URL`의 호스트 하나만 들어 있습니다. 아래에 해당하면 반드시 추가하세요.
 빠뜨리면 해당 페이지가 **인앱 브라우저로 새어 나가고, 로그인은 앱으로 돌아오지 않습니다.**
 
-- [ ] 서브도메인을 쓴다면 `.plick.app` 형태로 (앞의 `.`이 서브도메인 포함 의미)
+- [x] 서브도메인을 쓴다면 `.plick.co.kr` 형태로 (앞의 `.`이 서브도메인 포함 의미) — 반영됨
 - [ ] CDN / 이미지 서버 도메인 (웹뷰가 직접 네비게이션하는 경우만. `<img>` 로딩은 무관)
-- [ ] 소셜 로그인 도메인 — 쓰는 것만
-      - 네이버 `nid.naver.com`
-      - 카카오 `kauth.kakao.com`, `accounts.kakao.com`
-      - 구글 `accounts.google.com`
-      - 애플 `appleid.apple.com`
+- [x] 소셜 로그인 도메인 — 카카오·구글 사용 확정, 반영됨 (2026-08-04)
+      - 카카오 `kauth.kakao.com`, `accounts.kakao.com` ✅
+      - 구글 `accounts.google.com` ✅
+      - (미사용) 네이버 `nid.naver.com`, 애플 `appleid.apple.com`
+      - ⚠️ 구글은 웹뷰 내 OAuth를 차단할 수 있음(`disallowed_useragent` 403).
+        실기기 확인 시 구글 로그인이 403이면 웹 쪽에서 카카오처럼 리다이렉트 방식이
+        아닌 SDK/커스텀탭 전환을 검토해야 함 — 발생 시 별도 TODO로 승격
 - [ ] PG/결제 도메인 (토스페이먼츠, 아임포트, KG이니시스 등 — 결제창이 웹뷰에서 떠야 함)
 - [ ] 본인인증(PASS/NICE) 도메인
 

@@ -7,7 +7,7 @@
  */
 
 /** 앱이 처음 띄우는 모바일 웹 주소. */
-export const WEB_URL = process.env.EXPO_PUBLIC_WEB_URL ?? 'https://example.com';
+export const WEB_URL = process.env.EXPO_PUBLIC_WEB_URL ?? 'https://m.plick.co.kr';
 
 /**
  * 앱 안(웹뷰)에서 그대로 열어줄 호스트 목록.
@@ -18,11 +18,12 @@ export const WEB_URL = process.env.EXPO_PUBLIC_WEB_URL ?? 'https://example.com';
  */
 export const INTERNAL_HOSTS: string[] = [
   hostOf(WEB_URL),
-  // 소셜 로그인 등 웹뷰 안에서 처리해야 하는 도메인을 추가하세요.
-  // 'accounts.google.com',
-  // 'appleid.apple.com',
-  // 'nid.naver.com',
-  // 'kauth.kakao.com',
+  // .env로 WEB_URL을 로컬 주소로 덮어써도 프로덕션 도메인은 항상 앱 안에서 열립니다.
+  '.plick.co.kr',
+  // 소셜 로그인 — 로그인 페이지가 웹뷰 밖으로 새면 세션이 앱으로 돌아오지 못합니다.
+  'kauth.kakao.com',
+  'accounts.kakao.com',
+  'accounts.google.com',
 ];
 
 /** 웹이 "앱에서 열렸는지"를 판별할 수 있도록 User-Agent 뒤에 붙이는 문자열. */

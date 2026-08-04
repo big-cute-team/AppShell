@@ -110,8 +110,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ],
   extra: {
     eas: {
-      // `eas init` 실행 시 자동으로 채워집니다.
-      projectId: process.env.EAS_PROJECT_ID,
+      // @kimdowan1004s-team/plick (eas init으로 생성)
+      projectId: '06a29df6-638e-4045-8f1f-738bb65a6da0',
     },
   },
 });

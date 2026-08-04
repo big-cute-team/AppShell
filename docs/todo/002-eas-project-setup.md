@@ -1,23 +1,30 @@
 # 002. EAS 프로젝트 연결
 
-**상태: 🔴 블로커** — 연결 전에는 클라우드 빌드가 되지 않습니다.
-로그인이 필요해 에이전트가 대신 실행할 수 없습니다. **사람이 직접 실행하세요.**
+**상태: 🟡 진행 중** — 프로젝트 연결은 끝났습니다 (2026-08-04).
+크리덴셜 설정과 첫 빌드가 남았고, 계정 로그인이 필요해 사람이 직접 해야 합니다.
 
 ## 해야 할 일
 
-- [ ] Expo 계정 준비 (팀 계정 권장 — 개인 계정에 묶이면 인수인계가 어렵습니다)
-- [ ] 로그인 및 프로젝트 생성
+- [x] Expo 계정 준비 (팀 계정 권장 — 개인 계정에 묶이면 인수인계가 어렵습니다)
+      — `kimdowan1004s-team` 팀 계정 사용
+- [x] 로그인 및 프로젝트 생성
       ```bash
       eas login
       eas init          # app.config.ts 의 extra.eas.projectId 가 채워집니다
       ```
-- [ ] `projectId`가 실제로 들어갔는지 확인
+      — `@kimdowan1004s-team/plick` 생성됨.
+      구버전 eas-cli(21.1.0)는 `app.config.ts`를 읽다가
+      `Cannot read properties of undefined (reading 'CommonJS')` 로 실패합니다.
+      **`npx eas-cli@latest`를 쓰세요** (21.5.0에서 정상 동작 확인).
+- [x] `projectId`가 실제로 들어갔는지 확인
       ```bash
       npx expo config --type public | grep -A2 eas
       ```
-- [ ] `app.config.ts`의 `extra.eas.projectId`가 `process.env.EAS_PROJECT_ID`를 읽는 형태로
+      — `npx eas-cli@latest project:info` 로 연결까지 확인함
+- [x] `app.config.ts`의 `extra.eas.projectId`가 `process.env.EAS_PROJECT_ID`를 읽는 형태로
       남아 있다면, `eas init`이 써 넣은 값으로 하드코딩할지 결정
       (팀 공유 시 하드코딩이 편합니다)
+      — 하드코딩으로 결정 (`06a29df6-638e-4045-8f1f-738bb65a6da0`)
 
 ## 크리덴셜
 

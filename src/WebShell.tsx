@@ -110,7 +110,7 @@ export function WebShell() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
 
       {error ? (
         <ErrorView offline={offline} retrying={retrying} onRetry={handleRetry} />
@@ -163,7 +163,7 @@ export function WebShell() {
       {/* 첫 로드 중 스플래시가 이미 내려간 짧은 구간을 위한 폴백 인디케이터. */}
       {!ready && !error && (
         <View style={styles.loading} pointerEvents="none">
-          <ActivityIndicator size="large" color="#111111" />
+          <ActivityIndicator size="large" color="#FFFFFF" />
         </View>
       )}
     </SafeAreaView>

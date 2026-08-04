@@ -29,8 +29,9 @@ export const INTERNAL_HOSTS: string[] = [
 /** 웹이 "앱에서 열렸는지"를 판별할 수 있도록 User-Agent 뒤에 붙이는 문자열. */
 export const USER_AGENT_SUFFIX = 'PlickApp';
 
-/** 앱 배경색 — 스플래시/세이프에어리어/웹뷰 로딩 배경과 맞춰 둡니다. */
-export const BACKGROUND_COLOR = '#FFFFFF';
+/** 앱 배경색 — 웹의 다크 배경색과 동일 값. 스플래시/세이프에어리어/웹뷰 로딩 배경과
+ * 맞춰 둡니다 (app.config.ts의 BACKGROUND_COLOR와 한 쌍으로 관리). */
+export const BACKGROUND_COLOR = '#0B0D12';
 
 /** 당겨서 새로고침 허용 여부. 웹이 자체 스크롤 제스처를 쓰면 false로 두세요. */
 export const PULL_TO_REFRESH = true;

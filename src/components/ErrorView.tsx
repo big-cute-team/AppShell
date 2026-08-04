@@ -28,7 +28,7 @@ export function ErrorView({ offline, retrying, onRetry }: Props) {
         onPress={onRetry}
         style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}>
         {retrying ? (
-          <ActivityIndicator color="#FFFFFF" />
+          <ActivityIndicator color="#111111" />
         ) : (
           <Text style={styles.buttonLabel}>다시 시도</Text>
         )}
@@ -48,14 +48,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#111111',
+    color: '#FFFFFF',
     textAlign: 'center',
   },
   description: {
     marginTop: 8,
     fontSize: 14,
     lineHeight: 20,
-    color: '#666666',
+    color: '#9BA1AC',
     textAlign: 'center',
   },
   button: {
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
-    backgroundColor: '#111111',
+    backgroundColor: '#FFFFFF',
   },
   buttonPressed: {
     opacity: 0.7,
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#111111',
   },
 });

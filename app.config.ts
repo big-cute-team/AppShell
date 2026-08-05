@@ -6,7 +6,7 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
  * 버전/식별자를 바꿀 때는 이 파일만 수정하면 iOS·Android 양쪽에 반영됩니다.
  * 네이티브 프로젝트(ios/, android/)는 `npx expo prebuild`로 생성되므로 직접 수정하지 마세요.
  */
-const APP_NAME = 'plick';
+const APP_NAME = 'PLick';
 const APP_SLUG = 'plick';
 const APP_SCHEME = 'plick';
 const BUNDLE_ID = 'com.plick.app';
@@ -67,7 +67,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: BUNDLE_ID,
     adaptiveIcon: {
-      backgroundColor: '#E6F4FE',
+      backgroundColor: BACKGROUND_COLOR,
       foregroundImage: './assets/android-icon-foreground.png',
       backgroundImage: './assets/android-icon-background.png',
       monochromeImage: './assets/android-icon-monochrome.png',

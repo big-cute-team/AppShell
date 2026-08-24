@@ -8,7 +8,8 @@
 
 - [ ] Apple Developer Program 가입 (연 $99, 법인이면 D-U-N-S 번호 필요 — 발급에 수 주 걸립니다)
 - [ ] App Store Connect에서 앱 레코드 생성
-      - 번들 ID `com.plick.app` 등록 (Certificates, Identifiers & Profiles)
+      - 번들 ID `kr.co.plick.app` 등록 (Certificates, Identifiers & Profiles)
+        — `com.plick.app`은 Google Play에서 선점돼 있어 `kr.co.plick.app`으로 변경 (2026-08-24)
       - SKU, 기본 언어(한국어) 지정
 - [ ] `eas.json`의 `submit.production.ios` 플레이스홀더 채우기
       | 키 | 값 |
@@ -43,7 +44,8 @@ npm run submit:prod
 ### 사전 준비
 
 - [ ] Google Play 개발자 계정 (1회 $25). 법인 계정은 D-U-N-S 및 신원 확인 필요
-- [ ] Play Console에서 앱 생성, 패키지명 `com.plick.app`
+- [x] Play Console에서 앱 생성, 패키지명 `kr.co.plick.app` (2026-08-24)
+      — `com.plick.app`은 이미 사용 중이라 등록 불가, `kr.co.plick.app`(plick.co.kr 역도메인)으로 확정
 - [ ] **첫 AAB는 Play Console에 수동 업로드** — Google 정책상 첫 릴리즈 이후에야
       API 제출이 열립니다
       ```bash

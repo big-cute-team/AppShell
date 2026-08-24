@@ -9,7 +9,7 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
 const APP_NAME = 'PLick';
 const APP_SLUG = 'plick';
 const APP_SCHEME = 'plick';
-const BUNDLE_ID = 'com.plick.app';
+const BUNDLE_ID = 'kr.co.plick.app';
 
 /** 스토어에 노출되는 사용자용 버전. */
 const VERSION = '1.0.0';

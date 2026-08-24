@@ -8,7 +8,8 @@
 
 - [ ] Apple Developer Program 가입 (연 $99, 법인이면 D-U-N-S 번호 필요 — 발급에 수 주 걸립니다)
 - [ ] App Store Connect에서 앱 레코드 생성
-      - 번들 ID `com.plick.app` 등록 (Certificates, Identifiers & Profiles)
+      - 번들 ID `kr.co.plick.app` 등록 (Certificates, Identifiers & Profiles)
+        — `com.plick.app`은 Google Play에서 선점돼 있어 `kr.co.plick.app`으로 변경 (2026-08-24)
       - SKU, 기본 언어(한국어) 지정
 - [ ] `eas.json`의 `submit.production.ios` 플레이스홀더 채우기
       | 키 | 값 |
@@ -43,7 +44,8 @@ npm run submit:prod
 ### 사전 준비
 
 - [ ] Google Play 개발자 계정 (1회 $25). 법인 계정은 D-U-N-S 및 신원 확인 필요
-- [ ] Play Console에서 앱 생성, 패키지명 `com.plick.app`
+- [x] Play Console에서 앱 생성, 패키지명 `kr.co.plick.app` (2026-08-24)
+      — `com.plick.app`은 이미 사용 중이라 등록 불가, `kr.co.plick.app`(plick.co.kr 역도메인)으로 확정
 - [ ] **첫 AAB는 Play Console에 수동 업로드** — Google 정책상 첫 릴리즈 이후에야
       API 제출이 열립니다
       ```bash
@@ -76,6 +78,9 @@ npm run submit:prod
 - [ ] 개인정보처리방침 페이지가 모바일 웹에 실제로 존재하는지 확인
 - [ ] 계정 삭제 경로 — 회원가입이 있는 앱은 **양쪽 스토어 모두 필수**입니다.
       웹에 계정 삭제 기능이 없다면 먼저 만들어야 합니다
+- [ ] 댓글 신고·차단 기능 (**웹 저장소 소관**) — 웹에 댓글(UGC)이 있는데 신고/차단
+      수단이 없음. Google Play UGC 정책이 요구하는 항목이라 사후 점검에서 지적될 수 있음.
+      콘텐츠 등급 설문에는 "없음"으로 정직하게 답변함 (2026-08-24)
 
 ## 참고
 

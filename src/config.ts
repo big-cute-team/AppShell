@@ -24,6 +24,7 @@ export const INTERNAL_HOSTS: string[] = [
   'kauth.kakao.com',
   'accounts.kakao.com',
   'accounts.google.com',
+  'appleid.apple.com',
 ];
 
 /** 웹이 "앱에서 열렸는지"를 판별할 수 있도록 User-Agent 뒤에 붙이는 문자열. */

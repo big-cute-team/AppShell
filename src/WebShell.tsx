@@ -81,6 +81,12 @@ export function WebShell() {
       return false;
     }
 
+    // 서브프레임(iframe) 로드는 외부 브라우저로 보내지 않습니다 — Android는 iframe도
+    // 이 콜백을 타는데, 구글 로그인의 숨은 iframe(일회성 URL)이 새어 나가면 400이 뜹니다.
+    if (!request.isTopFrame) {
+      return true;
+    }
+
     if (isInternalUrl(url)) {
       return true;
     }

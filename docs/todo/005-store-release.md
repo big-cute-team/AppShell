@@ -6,17 +6,14 @@
 
 ### 사전 준비
 
-- [ ] Apple Developer Program 가입 (연 $99, 법인이면 D-U-N-S 번호 필요 — 발급에 수 주 걸립니다)
-- [ ] App Store Connect에서 앱 레코드 생성
-      - 번들 ID `kr.co.plick.app` 등록 (Certificates, Identifiers & Profiles)
-        — `com.plick.app`은 Google Play에서 선점돼 있어 `kr.co.plick.app`으로 변경 (2026-08-24)
-      - SKU, 기본 언어(한국어) 지정
-- [ ] `eas.json`의 `submit.production.ios` 플레이스홀더 채우기
-      | 키 | 값 |
-      | --- | --- |
-      | `appleId` | Apple 계정 이메일 |
-      | `ascAppId` | App Store Connect의 앱 ID (숫자) |
-      | `appleTeamId` | 10자 팀 ID |
+- [x] Apple Developer Program 가입 (연 $99) (2026-08-25)
+- [x] App Store Connect에서 앱 레코드 생성 (2026-08-25)
+      - 번들 ID `kr.co.plick.app` 등록 완료 — 기존 `kr.co.plick.web`(웹 Apple 로그인용)과
+        별개의 App ID이며, 그쪽은 웹 로그인이 물고 있으므로 삭제 금지
+      - 앱 이름 "PLick 플릭 - 프리미어리그 소식을 빠르게", SKU `kr-co-plick-app`, 기본 언어 한국어
+      - 이름의 홍보 문구가 심사(2.3.7)에서 지적되면 부제(Subtitle)로 옮길 것
+- [x] `eas.json`의 `submit.production.ios` 플레이스홀더 채우기 (2026-08-25)
+      — appleId `juns0720@naver.com` / ascAppId `6804931339` / appleTeamId `T23P6539H6`
 
 ### 심사 자료
 

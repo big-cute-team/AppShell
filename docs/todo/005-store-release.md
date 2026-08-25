@@ -33,7 +33,14 @@ npm run build:prod
 npm run submit:prod
 ```
 
-- [ ] TestFlight로 먼저 내부 테스트
+- [x] 빌드 1 업로드, TestFlight 내부 테스트 (2026-08-25)
+      — 카카오·애플 로그인 정상, **구글 첫 로그인 400 발견**: 로그인 성공 직후
+      `accounts.google.co.kr/accounts/SetSID`(세션 동기화 리다이렉트)가
+      `INTERNAL_HOSTS`에 없어 인앱 브라우저로 새면서 실패.
+      `src/config.ts`에 구글 지역 계정 도메인 패턴 추가로 수정, 시뮬레이터에서
+      첫 로그인 성공 확인
+- [ ] **빌드 2 생성·업로드** (구글 로그인 수정 반영) 후 TestFlight에서
+      구글 첫 로그인 재확인 — 확인 전에 심사 제출하지 말 것
 - [ ] 심사 제출
 
 ## Google Play (Android)

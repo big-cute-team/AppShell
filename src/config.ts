@@ -24,8 +24,18 @@ export const INTERNAL_HOSTS: string[] = [
   'kauth.kakao.com',
   'accounts.kakao.com',
   'accounts.google.com',
+  // 구글은 첫 로그인 성공 직후 세션 동기화(SetSID)를 위해 유튜브 계정 도메인을
+  // 경유합니다. 지역 도메인(accounts.google.co.kr 등)은 아래 정규식이 커버합니다.
+  'accounts.youtube.com',
   'appleid.apple.com',
 ];
+
+/**
+ * 구글 계정 지역 도메인 (accounts.google.co.kr, accounts.google.de …).
+ * 첫 로그인의 SetSID 리다이렉트가 접속 지역의 도메인을 경유하는데, 이게 웹뷰 밖으로
+ * 새면 "400 malformed" 단독 페이지가 떠 첫 구글 로그인이 실패합니다.
+ */
+const GOOGLE_REGIONAL_ACCOUNTS = /^accounts\.google\.[a-z]{2,3}(\.[a-z]{2})?$/;
 
 /** 웹이 "앱에서 열렸는지"를 판별할 수 있도록 User-Agent 뒤에 붙이는 문자열. */
 export const USER_AGENT_SUFFIX = 'PlickApp';
@@ -52,6 +62,10 @@ export function isInternalUrl(url: string): boolean {
     host = new URL(url).host.toLowerCase();
   } catch {
     // about:blank 같은 상대/특수 스킴은 웹뷰가 알아서 처리하도록 둡니다.
+    return true;
+  }
+
+  if (GOOGLE_REGIONAL_ACCOUNTS.test(host)) {
     return true;
   }
 

@@ -6,6 +6,8 @@
  * 비밀값(토큰/키)은 절대 여기에 두지 마세요.
  */
 
+import Constants from 'expo-constants';
+
 /** 앱이 처음 띄우는 모바일 웹 주소. */
 export const WEB_URL = process.env.EXPO_PUBLIC_WEB_URL ?? 'https://m.plick.co.kr';
 
@@ -37,8 +39,16 @@ export const INTERNAL_HOSTS: string[] = [
  */
 const GOOGLE_REGIONAL_ACCOUNTS = /^accounts\.google\.[a-z]{2,3}(\.[a-z]{2})?$/;
 
-/** 웹이 "앱에서 열렸는지"를 판별할 수 있도록 User-Agent 뒤에 붙이는 문자열. */
-export const USER_AGENT_SUFFIX = 'PlickApp';
+/** app.config.ts의 VERSION — 빌드에 임베드된 expoConfig에서 읽습니다. */
+const APP_VERSION = Constants.expoConfig?.version;
+
+/**
+ * 웹이 "앱에서 열렸는지"와 앱 버전을 판별할 수 있도록 User-Agent 뒤에 붙이는 문자열.
+ * 예: `PlickApp/1.0.0` — 버전은 app.config.ts의 VERSION이 빌드 시점에 임베드된 값입니다.
+ * 웹에서는 `/PlickApp\/(\S+)/` 패턴으로 버전을 읽으세요. 버전을 못 읽는 환경에서는
+ * 이전과 동일한 `PlickApp`만 붙습니다(웹의 기존 "앱 여부" 판별은 그대로 동작).
+ */
+export const USER_AGENT_SUFFIX = APP_VERSION ? `PlickApp/${APP_VERSION}` : 'PlickApp';
 
 /** 앱 배경색 — 웹의 다크 배경색과 동일 값. 스플래시/세이프에어리어/웹뷰 로딩 배경과
  * 맞춰 둡니다 (app.config.ts의 BACKGROUND_COLOR와 한 쌍으로 관리). */

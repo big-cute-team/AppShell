@@ -18,11 +18,19 @@ export const WEB_URL = process.env.EXPO_PUBLIC_WEB_URL ?? 'https://m.plick.co.kr
  *
  * 앞에 `.`을 붙이면 서브도메인까지 포함합니다(`.plick.app` → `www.plick.app` 허용).
  */
-export const INTERNAL_HOSTS: string[] = [
+/** 우리 서비스의 웹 호스트 — 웹뷰 배경을 다크(BACKGROUND_COLOR)로 칠해도 되는 곳. */
+const OWN_HOSTS: string[] = [
   hostOf(WEB_URL),
   // .env로 WEB_URL을 로컬 주소로 덮어써도 프로덕션 도메인은 항상 앱 안에서 열립니다.
   '.plick.co.kr',
-  // 소셜 로그인 — 로그인 페이지가 웹뷰 밖으로 새면 세션이 앱으로 돌아오지 못합니다.
+];
+
+/**
+ * 소셜 로그인 호스트 — 로그인 페이지가 웹뷰 밖으로 새면 세션이 앱으로 돌아오지 못합니다.
+ * 이 페이지들은 흰 배경을 가정하고 body 배경을 칠하지 않는 경우가 있어(카카오 2단계 인증),
+ * 웹뷰 배경도 흰색으로 전환합니다 (pageBackgroundColor 참고).
+ */
+const LOGIN_HOSTS: string[] = [
   'kauth.kakao.com',
   'accounts.kakao.com',
   'accounts.google.com',
@@ -31,6 +39,8 @@ export const INTERNAL_HOSTS: string[] = [
   'accounts.youtube.com',
   'appleid.apple.com',
 ];
+
+export const INTERNAL_HOSTS: string[] = [...OWN_HOSTS, ...LOGIN_HOSTS];
 
 /**
  * 구글 계정 지역 도메인 (accounts.google.co.kr, accounts.google.de …).
@@ -65,6 +75,17 @@ function hostOf(url: string): string {
   }
 }
 
+function matchesHost(host: string, entries: string[]): boolean {
+  return entries.some((entry) => {
+    const pattern = entry.toLowerCase();
+    if (!pattern) return false;
+    if (pattern.startsWith('.')) {
+      return host === pattern.slice(1) || host.endsWith(pattern);
+    }
+    return host === pattern;
+  });
+}
+
 /** 주어진 URL이 앱 웹뷰 안에서 열려야 하는지 판단합니다. */
 export function isInternalUrl(url: string): boolean {
   let host: string;
@@ -79,12 +100,26 @@ export function isInternalUrl(url: string): boolean {
     return true;
   }
 
-  return INTERNAL_HOSTS.some((entry) => {
-    const pattern = entry.toLowerCase();
-    if (!pattern) return false;
-    if (pattern.startsWith('.')) {
-      return host === pattern.slice(1) || host.endsWith(pattern);
-    }
-    return host === pattern;
-  });
+  return matchesHost(host, INTERNAL_HOSTS);
+}
+
+/**
+ * 주어진 URL에 맞는 웹뷰 배경색.
+ *
+ * 우리 웹은 다크 테마라 배경을 다크로 깔아야 스크롤 바운스·당겨서 새로고침 때
+ * 웹과 한 몸으로 보입니다. 반면 소셜 로그인 페이지는 흰 배경을 가정하고 body
+ * 배경을 칠하지 않는 경우가 있어(카카오 2단계 인증 글자 안 보임 이슈), 다크 배경이
+ * 그대로 비치면 진한 글자가 묻힙니다 — 그래서 우리 호스트가 아니면 흰색을 씁니다.
+ *
+ * about:blank처럼 호스트를 판별할 수 없는 URL은 null — 현재 배경을 유지하세요.
+ */
+export function pageBackgroundColor(url: string): string | null {
+  let host: string;
+  try {
+    host = new URL(url).host.toLowerCase();
+  } catch {
+    return null;
+  }
+
+  return matchesHost(host, OWN_HOSTS) ? BACKGROUND_COLOR : '#FFFFFF';
 }

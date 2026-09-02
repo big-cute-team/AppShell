@@ -25,6 +25,7 @@ import {
   USER_AGENT_SUFFIX,
   WEB_URL,
   isInternalUrl,
+  pageBackgroundColor,
 } from './config';
 
 /** 웹뷰가 아니라 OS가 처리해야 하는 스킴들 (전화·메일·문자·스토어·카카오/토스 등 앱 링크). */
@@ -40,6 +41,10 @@ export function WebShell() {
   const [retrying, setRetrying] = useState(false);
   /** key를 바꾸면 웹뷰가 완전히 새로 마운트됩니다 — 실패 후 재시도에 사용. */
   const [reloadKey, setReloadKey] = useState(0);
+  /** 현재 페이지에 맞는 웹뷰 배경 — 우리 웹은 다크, 소셜 로그인 등 외부 페이지는 흰색.
+   * body 배경을 안 칠하는 페이지(카카오 2단계 인증)에서 다크 배경이 비쳐
+   * 글자가 안 보이는 문제를 막습니다 (pageBackgroundColor 참고). */
+  const [pageBackground, setPageBackground] = useState(BACKGROUND_COLOR);
 
   // 첫 로드가 끝나거나 실패하면 스플래시를 내립니다.
   useEffect(() => {
@@ -65,6 +70,9 @@ export function WebShell() {
 
   const handleNavigationStateChange = useCallback((nav: WebViewNavigation) => {
     canGoBackRef.current = nav.canGoBack;
+    // 리다이렉트 등 onShouldStartLoadWithRequest를 거치지 않는 이동까지 커버합니다.
+    const background = pageBackgroundColor(nav.url);
+    if (background) setPageBackground(background);
   }, []);
 
   /**
@@ -88,6 +96,10 @@ export function WebShell() {
     }
 
     if (isInternalUrl(url)) {
+      // 로드가 시작되기 전에 배경을 전환해 둡니다 (완료 후 전환하면 로드 중
+      // 바운스 영역에서 이전 페이지 배경이 보입니다).
+      const background = pageBackgroundColor(url);
+      if (background) setPageBackground(background);
       return true;
     }
 
@@ -106,13 +118,19 @@ export function WebShell() {
     setError(true);
   }, []);
 
+  /** 웹뷰를 처음부터 다시 마운트합니다 — 시작 페이지(WEB_URL) 기준으로 배경도 되돌립니다. */
+  const remountWebView = useCallback(() => {
+    setPageBackground(BACKGROUND_COLOR);
+    setReloadKey((key) => key + 1);
+  }, []);
+
   const handleRetry = useCallback(() => {
     setRetrying(true);
     setError(false);
     setReady(false);
-    setReloadKey((key) => key + 1);
+    remountWebView();
     setRetrying(false);
-  }, []);
+  }, [remountWebView]);
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
@@ -125,7 +143,7 @@ export function WebShell() {
           key={reloadKey}
           ref={webViewRef}
           source={{ uri: WEB_URL }}
-          style={styles.webView}
+          style={[styles.webView, { backgroundColor: pageBackground }]}
           // 웹이 앱 안에서 열렸는지 감지할 수 있게 UA에 표식을 남깁니다.
           applicationNameForUserAgent={USER_AGENT_SUFFIX}
           onNavigationStateChange={handleNavigationStateChange}
@@ -139,8 +157,8 @@ export function WebShell() {
           }}
           onError={showError}
           // 웹뷰 렌더러가 죽었을 때(메모리 부족 등) 흰 화면 대신 자동 복구.
-          onRenderProcessGone={() => setReloadKey((key) => key + 1)}
-          onContentProcessDidTerminate={() => setReloadKey((key) => key + 1)}
+          onRenderProcessGone={remountWebView}
+          onContentProcessDidTerminate={remountWebView}
           // target="_blank" 링크도 onShouldStartLoadWithRequest를 타도록 강제합니다.
           setSupportMultipleWindows={false}
           // 개발 빌드에서만 Safari 웹 인스펙터(Develop 메뉴)에 웹뷰를 노출합니다.
@@ -181,9 +199,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: BACKGROUND_COLOR,
   },
+  // 배경색은 현재 URL에 따라 렌더 시점에 결정됩니다 (pageBackground state).
   webView: {
     flex: 1,
-    backgroundColor: BACKGROUND_COLOR,
   },
   loading: {
     ...StyleSheet.absoluteFill,

@@ -12,7 +12,7 @@ const APP_SCHEME = 'plick';
 const BUNDLE_ID = 'kr.co.plick.app';
 
 /** 스토어에 노출되는 사용자용 버전. */
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 
 /** 브랜드 컬러 — 스플래시 배경, 상태바 뒤 영역, 웹뷰 로딩 배경에 함께 쓰입니다.
  * 웹의 다크 배경색과 동일하게 유지하세요 (src/config.ts의 BACKGROUND_COLOR와 한 쌍). */

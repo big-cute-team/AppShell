@@ -21,7 +21,7 @@ iOS 실기기용 크리덴셜은 Apple Developer 가입 후 첫 preview iOS 빌�
 | 002 | [EAS 프로젝트 연결](./002-eas-project-setup.md) | 첫 빌드·키스토어 백업 완료. iOS 실기기 크리덴셜만 남음 | 🟡 진행 중 |
 | 003 | [첫 실기기 동작 확인](./003-first-device-run.md) | iOS·Android 개발 빌드로 체크리스트 전부 확인 (2026-08-04) | ✅ 완료 |
 | 004 | [브랜딩 에셋 교체](./004-branding-assets.md) | PLick 로고로 교체 완료, 실기기 눈 확인만 남음 | 🟢 교체 완료 |
-| 005 | [스토어 등록과 제출](./005-store-release.md) | ASC/Play Console 레코드, 심사 자료 | ⚪ 대기 |
+| 005 | [스토어 등록과 제출](./005-store-release.md) | iOS 1.0.0 출시·1.0.1 심사 중. Android 프로덕션 액세스 신청 접수(9/8), 승인 대기 | 🟡 진행 중 |
 | 006 | [심사 리스크 대응 (4.2)](./006-review-risk-native-features.md) | 웹뷰 껍데기 반려 대비 네이티브 기능 | 🟡 검토 필요 |
 | 007 | [운영 준비](./007-operations.md) | 크래시 리포팅, CI, 앱 버전 게이팅 | ⚪ 나중에 |
 | 008 | [세이프 에어리어·상태바 시각 정리](./008-safe-area-visuals.md) | 다크 배경·상태바·소셜 로그인 배경 전환 반영됨. 크롬 비교·실기기 확인 남음 | 🟡 진행 중 |

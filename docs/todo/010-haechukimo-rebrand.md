@@ -63,9 +63,14 @@
 
 ## 5. 빌드·제출
 
-- [ ] `eas build --profile production --platform all` (버전 1.1.0, 빌드 번호는 EAS 자동)
-- [ ] iOS: `eas submit` 또는 Transporter → App Store Connect 1.1.0에 빌드 연결
-- [ ] Android: AAB 수동 업로드 (서비스 계정 자동 제출은 [005](./005-store-release.md) 미완)
+- [x] `eas build --profile production --platform all` 시작 (2026-10-05, 버전 1.1.0, 빌드 번호는 EAS 자동)
+      - Android: https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/2a75affd-f624-4995-bf33-3ee55a4e6a91
+      - iOS: https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/81ee1e6f-1ac8-41d8-9fb1-7039dc62d608
+      - **둘 다 FINISHED (2026-10-05 13:45)** — iOS 1.1.0 (4), Android 1.1.0 (versionCode 10)
+      - AAB 사본: `~/Desktop/해축이모-스토어-자산-2026-10/build/haechukimo-1.1.0-versionCode10.aab`
+- [ ] iOS: `npx eas-cli submit --platform ios --profile production --id 81ee1e6f-1ac8-41d8-9fb1-7039dc62d608`
+      (Apple 로그인 필요 — 사람이) 또는 Transporter → App Store Connect 1.1.0에 빌드 (4) 연결
+- [ ] Android: 위 AAB를 Play Console에 수동 업로드 (서비스 계정 자동 제출은 [005](./005-store-release.md) 미완)
 - [ ] 두 스토어 심사 통과 후 [005](./005-store-release.md) 릴리즈 기록 갱신
 
 ## 함께 가는 작업

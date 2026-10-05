@@ -1,6 +1,8 @@
 # 009. 인스타그램 앱 설치 광고
 
-**상태: ⚪ 계획** — 광고 채널은 **인스타그램(Meta)만** 씁니다. 구현 착수 전.
+**상태: 🟡 진행 중** — 광고 채널은 **인스타그램(Meta)만** 씁니다.
+**셸 쪽 연동은 2026-10-05 완료**(1.1.0 빌드에 포함, [010](./010-haechukimo-rebrand.md)과 같은 빌드).
+Meta 콘솔·스토어 양식·캠페인 생성이 남음. 캠페인은 기존 트래픽 캠페인을 잇지 않고 **새로 만든다.**
 
 ## 왜 필요한가
 
@@ -25,31 +27,34 @@
 
 ## 결정
 
-- [ ] MMP 없이 **Meta SDK를 직접** 붙인다 — [ADR-0004](../adr/0004-meta-sdk-for-instagram-install-ads.md) (Proposed).
-      구현·검증이 끝나면 Accepted로 바꿉니다.
+- [x] MMP 없이 **Meta SDK를 직접** 붙인다 — [ADR-0004](../adr/0004-meta-sdk-for-instagram-install-ads.md).
+      2026-10-05 구현·로컬 빌드 검증 후 Accepted.
 
 ## 1. 앱 셸 (이 저장소)
 
 네이티브 의존성이므로 전부 `npx expo install`로 추가하고, 설정은 `app.config.ts`로만 합니다.
 
-- [ ] `npx expo install react-native-fbsdk-next` — SDK 57(RN 0.86) 호환 버전인지 먼저 확인
-- [ ] `app.config.ts` `plugins`에 `react-native-fbsdk-next` config plugin 추가
-      - `appID: '1849042269863007'`, `clientToken`, `displayName: 'PLick'`, `scheme: 'fb1849042269863007'`
-      - `advertiserIDCollectionEnabled`, `autoLogAppEventsEnabled`, `isAutoInitEnabled`
-      - clientToken 출처: 개발자 앱 → 앱 설정 → 고급 설정 → 보안 → 클라이언트 토큰.
-        앱 바이너리에 들어가는 값이라 비밀값은 아니지만 **`EXPO_PUBLIC_`로 두지 말고** `app.config.ts`에서만 씁니다.
-        **앱 시크릿 코드는 절대 넣지 않습니다.**
-- [ ] iOS ATT — `npx expo install expo-tracking-transparency`
-      - `NSUserTrackingUsageDescription` 문구 (예: "맞춤 광고 성과 측정을 위해 사용됩니다")
-      - 앱 시작 시 권한 요청 → 결과를 SDK에 전달 (`Settings.setAdvertiserTrackingEnabled`)
-      - 요청 타이밍: 웹뷰 첫 로드 전/후 중 결정. 거부해도 앱은 정상 동작해야 함
-- [ ] iOS `infoPlist.SKAdNetworkItems`에 Meta SKAdNetwork ID 추가
-      (`v9wttpbfk9.skadnetwork`, `n38lu8286q.skadnetwork` — 착수 시 Meta 문서로 최신 목록 재확인)
-- [ ] Android `permissions`에 `com.google.android.gms.permission.AD_ID` (Android 13+)
+- [x] `npx expo install react-native-fbsdk-next` → **13.4.3** (2026-10-05). 공식적으로 RN 0.86/New Arch
+      지원을 명시하지 않고 Expo 55+ 관련 이슈(#668 iOS 컴파일, #643 New Arch에서 `Settings.*` 예외)가
+      wontfix로 닫혀 있어, 로컬 iOS·Android 컴파일로 직접 확인함. iOS SDK 핀 `FBSDKCoreKit ~> 18.0`
+- [x] `app.config.ts` `plugins`에 `react-native-fbsdk-next` config plugin 추가
+      - `appID: '1849042269863007'`, `clientToken`, `displayName: APP_NAME`(해축이모), `scheme: 'fb1849042269863007'`
+      - `advertiserIDCollectionEnabled`, `autoLogAppEventsEnabled`, `isAutoInitEnabled` 모두 true
+      - clientToken은 `app.config.ts`의 `META_CLIENT_TOKEN` 상수. 바이너리에 들어가는 공개 식별자라
+        비밀값은 아니지만 `EXPO_PUBLIC_`로 두지 않음. **앱 시크릿 코드는 절대 넣지 않습니다.**
+- [x] iOS ATT — `expo-tracking-transparency` 57.0.2
+      - 문구: "광고 성과 측정을 위해 사용됩니다. 허용하지 않아도 앱의 모든 기능을 쓸 수 있습니다."
+      - `src/tracking.ts` — 웹 첫 로드 후(스플래시 내린 직후) 요청, 결과를 `Settings.setAdvertiserTrackingEnabled`로 전달.
+        iOS 17+/FB SDK 17+ 조합은 SDK가 ATT 상태를 직접 읽지만 iOS 14.5~16 때문에 유지. 실패는 전부 삼킴
+- [x] iOS `infoPlist.SKAdNetworkItems` — `v9wttpbfk9.skadnetwork`(Facebook), `n38lu8286q.skadnetwork`(Instagram).
+      fbsdk-next 플러그인이 넣어 주지 않아 직접 등록. 출처 https://developers.facebook.com/docs/SKAdNetwork
+- [x] Android `permissions`에 `com.google.android.gms.permission.AD_ID` — Facebook SDK 13+가 자체 매니페스트로도
+      선언하지만 Play "광고 ID 선언"을 바꿔야 하는 이유가 드러나도록 명시
 - [ ] (선택) 웹 → 앱 이벤트 브리지 — 회원가입 등은 웹에서 일어나므로, 웹이 `postMessage`로 알리면
       셸이 `AppEventsLogger`로 기록. 웹 저장소 작업이 함께 필요. 화면은 늘리지 않음
-- [ ] 검증: `npm run typecheck`, `npx expo config --type public`, `npm run doctor`,
-      `npx expo prebuild --no-install --clean`
+- [x] 검증: `npm run typecheck`, `npx expo config --type public`, `npm run doctor`(21/21),
+      `npx expo prebuild --no-install --clean` — Info.plist에 FacebookAppID/ClientToken/SKAdNetworkItems/
+      NSUserTrackingUsageDescription, AndroidManifest에 `com.facebook.sdk.*` meta-data·AD_ID 확인 (2026-10-05)
 - [ ] 개발 빌드(`npm run ios` / `npm run android`)로 확인 — **Expo Go로는 검증 불가**
       - ATT 팝업 노출, 앱 실행 이벤트가 이벤트 관리자 "테스트 이벤트"에 들어오는지
 
@@ -70,6 +75,7 @@ Google Play Console
 
 ## 4. Meta 설정
 
+- [ ] 개발자 앱·페이지·비즈니스 포트폴리오 이름 `PLick` → **`해축이모`** (2026-10-05 결정)
 - [ ] 개발자 앱 → 기본 설정 → 플랫폼 추가 → **Android** (패키지명 `kr.co.plick.app`, Google Play)
 - [ ] SDK가 실린 빌드 배포 후 **이벤트 관리자**에서 앱 이벤트(설치·앱 실행) 수신 확인
 - [ ] iOS 14+ 캠페인의 앱 선택 음영이 풀렸는지 확인
@@ -78,7 +84,8 @@ Google Play Console
 
 iOS와 Android는 **캠페인을 따로** 만듭니다 (iOS 14+ 캠페인은 iOS 전용).
 
-- [ ] iOS: `만들기` → `앱 홍보` → 수동 → iOS 14 이상 캠페인 켜기 → 앱 `PLick`
+- [ ] iOS: `만들기` → `앱 홍보` → 수동 → iOS 14 이상 캠페인 켜기 → 앱 `해축이모`(구 PLick)
+      앱 선택 음영이 안 풀리면: 이벤트 관리자 → 데이터 소스 → 앱 → 설정 → Apple SKAdNetwork 구성 (SDK 이벤트 수신이 전제)
 - [ ] Android: 같은 방식, 앱 스토어 Google Play
 - [ ] 공통 광고 세트 설정: 성과 목표 **앱 설치 수 극대화**, 노출 위치 수동 → **플랫폼 Instagram만**,
       `앱 및 사이트` 해제, **`제외된 노출 위치에 제한적인 지출 허용` 해제**

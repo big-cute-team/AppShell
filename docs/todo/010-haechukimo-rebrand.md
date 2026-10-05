@@ -35,9 +35,9 @@
 | `play/` | GP1~GP8 · 1080×1920 · 첫 화면 분할 버전 8장 |
 | `icon/app-store-icon-1024.png` | App Store 아이콘 (알파 없음) |
 | `icon/play-icon-512.png` | Play 고해상도 아이콘 |
-| `icon/play-feature-graphic-1024x500-A_얼굴.png`, `…-B_전신.png` | Play 피처 그래픽 초안 2종 — 하나 고르기 |
+| `icon/play-feature-graphic-1024x500.png` | Play 피처 그래픽 — **전신 캐릭터 버전으로 확정(2026-10-05)**. 얼굴 버전은 `icon/미채택/` |
 
-- [ ] 피처 그래픽 A/B 중 선택 (디자이너 확인이 필요하면 Figma에 올려서 결정)
+- [x] 피처 그래픽 A(얼굴)/B(전신) 중 **B 전신** 선택 (2026-10-05)
 
 ## 3. App Store Connect (1.1.0 제출과 함께)
 
@@ -55,7 +55,7 @@
 ## 4. Google Play Console
 
 - [ ] 스토어 등록정보 → 앱 이름 `해축이모`, 간단한 설명(80자), 자세한 설명(4000자)
-- [ ] 아이콘 512 (`icon/play-icon-512.png`), 피처 그래픽 1024×500 (A 또는 B)
+- [ ] 아이콘 512 (`icon/play-icon-512.png`), 피처 그래픽 1024×500 (`icon/play-feature-graphic-1024x500.png`)
 - [ ] 휴대전화 스크린샷 8장 교체 (`play/`)
 - [ ] 데이터 보안 → 기기 ID·광고 ID 공유 추가, 앱 콘텐츠 → **광고 ID 선언 "사용함"**
       (매니페스트에 `AD_ID` 권한이 들어가므로 "사용 안 함"이면 업로드가 거부됨)

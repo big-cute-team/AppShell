@@ -19,7 +19,9 @@ import type {
 } from 'react-native-webview/lib/WebViewTypes';
 
 import { ErrorView } from './components/ErrorView';
+import { requestTrackingPermission } from './tracking';
 import {
+  ACCENT_COLOR,
   BACKGROUND_COLOR,
   PULL_TO_REFRESH,
   USER_AGENT_SUFFIX,
@@ -41,15 +43,20 @@ export function WebShell() {
   const [retrying, setRetrying] = useState(false);
   /** key를 바꾸면 웹뷰가 완전히 새로 마운트됩니다 — 실패 후 재시도에 사용. */
   const [reloadKey, setReloadKey] = useState(0);
-  /** 현재 페이지에 맞는 웹뷰 배경 — 우리 웹은 다크, 소셜 로그인 등 외부 페이지는 흰색.
-   * body 배경을 안 칠하는 페이지(카카오 2단계 인증)에서 다크 배경이 비쳐
-   * 글자가 안 보이는 문제를 막습니다 (pageBackgroundColor 참고). */
+  /** 현재 페이지에 맞는 웹뷰 배경 — 우리 웹은 BACKGROUND_COLOR, 소셜 로그인 등 외부
+   * 페이지는 흰색. body 배경을 안 칠하는 페이지(카카오 2단계 인증)에서 어두운 배경이
+   * 비쳐 글자가 안 보이는 문제를 막습니다 (pageBackgroundColor 참고). */
   const [pageBackground, setPageBackground] = useState(BACKGROUND_COLOR);
 
-  // 첫 로드가 끝나거나 실패하면 스플래시를 내립니다.
+  // 첫 로드가 끝나거나 실패하면 스플래시를 내리고, 그 뒤에 iOS ATT 팝업을 띄웁니다.
+  // 스플래시 위에서 팝업이 뜨면 맥락 없이 권한만 묻는 모양새가 돼서 화면이 보인 뒤로 미룹니다.
   useEffect(() => {
     if (ready || error) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync()
+        .catch(() => {})
+        .finally(() => {
+          requestTrackingPermission();
+        });
     }
   }, [ready, error]);
 
@@ -134,7 +141,8 @@ export function WebShell() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <StatusBar style="light" />
+      {/* 배경이 흰색이라 상태바 아이콘은 어둡게. BACKGROUND_COLOR를 어둡게 바꾸면 "light"로. */}
+      <StatusBar style="dark" />
 
       {error ? (
         <ErrorView offline={offline} retrying={retrying} onRetry={handleRetry} />
@@ -187,7 +195,7 @@ export function WebShell() {
       {/* 첫 로드 중 스플래시가 이미 내려간 짧은 구간을 위한 폴백 인디케이터. */}
       {!ready && !error && (
         <View style={styles.loading} pointerEvents="none">
-          <ActivityIndicator size="large" color="#FFFFFF" />
+          <ActivityIndicator size="large" color={ACCENT_COLOR} />
         </View>
       )}
     </SafeAreaView>

@@ -1,6 +1,6 @@
 # ADR-0004: 인스타 앱 설치 광고를 위해 Meta SDK를 직접 붙인다 (MMP 미도입)
 
-- **상태**: Proposed
+- **상태**: Accepted (2026-10-05 — 셸 연동 구현, iOS·Android 로컬 컴파일 확인. 캠페인 성과 검증은 [009](../todo/009-instagram-app-install-ads.md))
 - **날짜**: 2026-09-27
 - **관련**: ADR-0001, `docs/todo/009-instagram-app-install-ads.md`
 
@@ -28,6 +28,12 @@ SDK는 설치·앱 실행 이벤트 자동 로깅까지만 쓰고, 화면이나 
 | SDK 없이 트래픽 캠페인만 | 셸 변경·재심사 없음 | App Store 직링크 불가(`#1487810`), 설치 최적화·집계 불가 | ❌ (증빙용 임시 운영만) |
 
 ## 결과
+
+구현 메모 (2026-10-05): `react-native-fbsdk-next` 13.4.3은 RN 0.86/New Architecture 지원을 공식적으로
+명시하지 않고 Expo 55+ 관련 이슈가 wontfix로 닫혀 있다. 그래서 Expo 57 로컬 iOS(FBSDKCoreKit 18.1.1)·Android
+컴파일로 직접 확인하고 채택했다. JS에서 쓰는 SDK API는 `Settings.setAdvertiserTrackingEnabled` 하나뿐이고
+실패해도 삼키므로, 네이티브 자동 초기화(plist/manifest)만 살아 있으면 설치·앱 실행 이벤트는 집계된다.
+라이브러리가 더 망가지면 대안은 네이티브 SDK를 직접 감싸는 config plugin + Expo Module이다.
 
 - iOS에 ATT 팝업이 생긴다. App Store 개인정보 영양 성분표와 Play 데이터 보안·광고 ID 선언을 "추적/공유함"으로 바꿔야 하고,
   이 변경을 담은 새 버전이 양 스토어 심사를 다시 거친다.

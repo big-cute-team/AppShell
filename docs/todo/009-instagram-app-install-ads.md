@@ -105,6 +105,13 @@ iOS와 Android는 **캠페인을 따로** 만듭니다 (iOS 14+ 캠페인은 iOS
 - 노출 위치를 수동으로 바꿔도 **`제외된 노출 위치에 제한적인 지출 허용`**이 기본으로 켜져 있어 예산 ~5%가 Facebook 등으로 샙니다.
 - 기기/OS 설정을 바꾸면 플랫폼 선택이 초기화된 것처럼 보일 수 있으니 요약을 다시 확인합니다.
 
+## Google Ads 앱 캠페인 (2026-10-06 추가)
+
+- Android: SDK 없이도 가능 — Play 설치가 자동 추적됨. 2026-10-06 크레딧 소진용 설치 캠페인 집행 (예산 ₩80,000, 당일 종료)
+- iOS: **Google Ads iOS 앱 캠페인은 Firebase(Google Analytics) SDK나 MMP 전환 추적이 있어야 앱을 선택할 수 있다.**
+  1.1.0에는 Meta SDK만 들어 있어 **아직 불가.** 필요해지면 `@react-native-firebase/app` + `analytics`를 config plugin으로 붙이는
+  작업을 별도 todo/ADR로 다룬다 (ADR-0004의 "Meta 외 채널 추가 시 재검토" 조건에 해당)
+
 ## 참고
 
 - 광고 관리자: https://adsmanager.facebook.com

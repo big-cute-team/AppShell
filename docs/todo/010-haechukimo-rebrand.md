@@ -80,7 +80,9 @@
       - iOS: https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/81ee1e6f-1ac8-41d8-9fb1-7039dc62d608
       - **둘 다 FINISHED (2026-10-05 13:45)** — iOS 1.1.0 (4), Android 1.1.0 (versionCode 10)
       - AAB 사본: `~/Desktop/해축이모-스토어-자산-2026-10/build/haechukimo-1.1.0-versionCode10.aab`
-- [ ] iOS: `npx eas-cli submit --platform ios --profile production --id 81ee1e6f-1ac8-41d8-9fb1-7039dc62d608`
+- [x] iOS: 1.1.1 빌드 (5) `eas submit` 업로드 → App Store Connect **심사 제출 완료 (2026-10-06 16:24, 제출 ID 264bf96e)**.
+      첫 시도는 Apple 개발자 계약 갱신 미동의로 실패 → 계정 소유자가 developer.apple.com에서 동의 후 성공.
+      이름·부제·설명·스크린샷(1206×2622, ASC 새 요구 크기)·개인정보 라벨(추적 항목) 갱신, 수동 출시 선택
       (Apple 로그인 필요 — 사람이) 또는 Transporter → App Store Connect 1.1.0에 빌드 (4) 연결
 - [ ] Android: 위 AAB를 Play Console에 수동 업로드 (서비스 계정 자동 제출은 [005](./005-store-release.md) 미완)
 - [ ] 두 스토어 심사 통과 후 [005](./005-store-release.md) 릴리즈 기록 갱신

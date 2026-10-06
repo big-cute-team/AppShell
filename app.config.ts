@@ -12,7 +12,7 @@ const APP_SCHEME = 'plick';
 const BUNDLE_ID = 'kr.co.plick.app';
 
 /** 스토어에 노출되는 사용자용 버전. */
-const VERSION = '1.1.0';
+const VERSION = '1.1.1';
 
 /** 앱 배경색 — 스플래시 배경, 상태바 뒤 영역, 웹뷰 로딩 배경에 함께 쓰입니다.
  * 웹(해축이모, 라이트 전용)의 `--plk-bg`와 동일하게 유지하세요
@@ -33,6 +33,14 @@ const ICON_BACKGROUND_COLOR = '#0FB569';
  */
 const META_APP_ID = '1849042269863007';
 const META_CLIENT_TOKEN = '7657fe35b18fb878040e0e24528fd304';
+
+/**
+ * Firebase(Google Analytics) — Google Ads iOS 앱 캠페인의 전환 추적용 (ADR-0005).
+ * 설치·첫 실행(first_open)만 자동 수집하고, 추가 이벤트 코드는 두지 않습니다.
+ * 두 파일은 Firebase 콘솔 → 프로젝트 설정에서 받은 공개 설정값(비밀값 아님)이라 커밋합니다.
+ */
+const FIREBASE_IOS_CONFIG = './GoogleService-Info.plist';
+const FIREBASE_ANDROID_CONFIG = './google-services.json';
 
 /** iOS ATT(앱 추적 투명성) 팝업 문구. 거부해도 앱은 정상 동작합니다. */
 const TRACKING_PERMISSION_TEXT =
@@ -64,6 +72,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: BUNDLE_ID,
     supportsTablet: false,
+    googleServicesFile: FIREBASE_IOS_CONFIG,
     infoPlist: {
       // 웹뷰가 HTTPS만 로드하도록 강제합니다. HTTP 자원이 필요하면 여기서 예외를 여세요.
       //
@@ -82,17 +91,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       NSMicrophoneUsageDescription:
         '동영상 촬영 시 마이크 접근 권한이 필요합니다.',
       ITSAppUsesNonExemptEncryption: false,
-      // Meta 광고의 iOS 설치 귀속(SKAdNetwork). react-native-fbsdk-next 플러그인은
-      // 이 항목을 넣어 주지 않으므로 직접 등록합니다.
-      // 출처: https://developers.facebook.com/docs/SKAdNetwork (Facebook / Instagram)
+      // 광고 네트워크별 iOS 설치 귀속(SKAdNetwork). 각 SDK 플러그인이 넣어 주지 않으므로 직접 등록합니다.
+      // - Meta: https://developers.facebook.com/docs/SKAdNetwork (Facebook / Instagram)
+      // - Google Ads: https://support.google.com/google-ads/answer/10005960
       SKAdNetworkItems: [
         { SKAdNetworkIdentifier: 'v9wttpbfk9.skadnetwork' },
         { SKAdNetworkIdentifier: 'n38lu8286q.skadnetwork' },
+        { SKAdNetworkIdentifier: 'cstr6suwn9.skadnetwork' },
       ],
     },
   },
   android: {
     package: BUNDLE_ID,
+    googleServicesFile: FIREBASE_ANDROID_CONFIG,
     adaptiveIcon: {
       backgroundColor: ICON_BACKGROUND_COLOR,
       foregroundImage: './assets/android-icon-foreground.png',
@@ -137,11 +148,26 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     ['expo-tracking-transparency', { userTrackingPermission: TRACKING_PERMISSION_TEXT }],
+    // Firebase는 SPM 대신 CocoaPods로 받습니다(disableSPM). react-native-firebase 26 기본값인 SPM 모드는
+    // 정적 링크(Expo 기본)와 함께 쓰면 pod install이 "SPM + static linkage is not supported"로 실패하고,
+    // 동적 프레임워크로 바꾸는 쪽이 RN 생태계에서 더 위험해서 CocoaPods + 정적 프레임워크 조합을 택했습니다 (2026-10-06).
+    ['@react-native-firebase/app', { ios: { disableSPM: true } }],
+    '@react-native-firebase/analytics',
+    // IDFA 링크(AdSupport) — 없으면 ATT를 허용받아도 Google Ads 설치 귀속에 식별자가 안 쓰입니다.
+    './plugins/withFirebaseAdSupport.js',
     [
       'expo-build-properties',
       {
         // iOS 최소 지원 버전은 Expo SDK 기본값(16.4)을 따릅니다.
         // 더 높여야 하면 여기에 `ios: { deploymentTarget: '17.0' }` 를 추가하세요.
+        ios: {
+          // Firebase iOS SDK(CocoaPods 경로)는 정적 프레임워크로 링크해야 합니다 — react-native-firebase 요구사항.
+          // 위 '@react-native-firebase/app'의 disableSPM과 한 쌍입니다.
+          useFrameworks: 'static',
+          // Expo 57의 사전 컴파일 모듈 모드는 대부분의 pod에서 프레임워크 링크를 끄는데,
+          // react-native-firebase pod은 정적 프레임워크로 남겨야 합니다 (rnfirebase.io Expo 안내).
+          forceStaticLinking: ['RNFBApp', 'RNFBAnalytics'],
+        },
         android: {
           // 기본은 HTTPS 전용. 로컬 개발 웹을 붙일 때만 `.env`의
           // ALLOW_CLEARTEXT_TRAFFIC=1 로 켭니다(위 ALLOW_CLEARTEXT 주석 참고).

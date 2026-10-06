@@ -108,9 +108,26 @@ iOS와 Android는 **캠페인을 따로** 만듭니다 (iOS 14+ 캠페인은 iOS
 ## Google Ads 앱 캠페인 (2026-10-06 추가)
 
 - Android: SDK 없이도 가능 — Play 설치가 자동 추적됨. 2026-10-06 크레딧 소진용 설치 캠페인 집행 (예산 ₩80,000, 당일 종료)
-- iOS: **Google Ads iOS 앱 캠페인은 Firebase(Google Analytics) SDK나 MMP 전환 추적이 있어야 앱을 선택할 수 있다.**
-  1.1.0에는 Meta SDK만 들어 있어 **아직 불가.** 필요해지면 `@react-native-firebase/app` + `analytics`를 config plugin으로 붙이는
-  작업을 별도 todo/ADR로 다룬다 (ADR-0004의 "Meta 외 채널 추가 시 재검토" 조건에 해당)
+- iOS: Google Ads iOS 앱 캠페인은 Firebase(Google Analytics) SDK나 MMP 전환 추적이 있어야 앱을 선택할 수 있다.
+  → **1.1.1에 Firebase Analytics를 넣기로 결정** ([ADR-0005](../adr/0005-firebase-analytics-for-google-ads-ios.md)), 1.1.0 심사와 묶음.
+
+### 셸 (2026-10-06)
+- [x] `npx expo install @react-native-firebase/app @react-native-firebase/analytics` → 26.4.0
+- [x] `app.config.ts`: 두 플러그인 등록, `ios/android.googleServicesFile`, `expo-build-properties.ios.useFrameworks: 'static'`,
+      SKAdNetwork에 Google `cstr6suwn9.skadnetwork` 추가, VERSION 1.1.1
+- [x] Firebase 콘솔에서 받은 `GoogleService-Info.plist` / `google-services.json`을 저장소 루트에 (2026-10-06, 프로젝트 `plick-6f560`)
+- [x] iOS 링크 방식 확정 — SPM 기본값은 정적 링크와 충돌 → `disableSPM` + `useFrameworks: 'static'` + `forceStaticLinking`
+      ([ADR-0005](../adr/0005-firebase-analytics-for-google-ads-ios.md)). AdSupport는 `plugins/withFirebaseAdSupport.js`
+- [x] Android 로컬 컴파일 확인 — 병합 매니페스트에 Firebase/measurement 항목 포함 (2026-10-06)
+- [ ] iOS 로컬 컴파일 확인 (Meta SDK·웹뷰와 공존)
+- [ ] 1.1.1 EAS 프로덕션 빌드
+
+### Google 콘솔 (사람)
+- [ ] Firebase 프로젝트 → 프로젝트 설정 → 통합 → **Google Ads 연결** (광고 계정 선택)
+- [ ] Google Ads → 목표 → 전환 → 새 전환 액션 → 앱 → Google 애널리틱스(Firebase) → `first_open` 가져오기 (iOS·Android)
+- [ ] 1.1.1 배포 후 실기기에서 첫 실행 → Firebase 애널리틱스 "실시간"에 이벤트 확인
+- [ ] Google Ads 앱 캠페인 만들기에서 **iOS** 앱 선택이 되는지 확인
+- [ ] App Store 개인정보 영양 성분표에 Analytics 항목 추가 (Meta 추적 항목과 함께)
 
 ## 참고
 

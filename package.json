@@ -16,6 +16,8 @@
     "submit:prod": "eas submit --profile production --platform all"
   },
   "dependencies": {
+    "@react-native-firebase/analytics": "^26.4.0",
+    "@react-native-firebase/app": "^26.4.0",
     "expo": "~57.0.26",
     "expo-build-properties": "~57.0.22",
     "expo-constants": "~57.0.20",

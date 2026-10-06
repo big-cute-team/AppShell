@@ -63,6 +63,10 @@
 
 ## 5. 빌드·제출
 
+> 2026-10-06: 1.1.0 빌드는 완료했지만 **제출 전에 Firebase(Google Ads iOS)를 얹어 1.1.1로 다시 빌드**하기로 함 — 심사를 한 번만 받기 위해.
+> 아래 1.1.0 항목은 기록용, 실제 제출은 1.1.1. 자산·문구는 그대로 쓴다.
+
+
 - [x] `eas build --profile production --platform all` 시작 (2026-10-05, 버전 1.1.0, 빌드 번호는 EAS 자동)
       - Android: https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/2a75affd-f624-4995-bf33-3ee55a4e6a91
       - iOS: https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/81ee1e6f-1ac8-41d8-9fb1-7039dc62d608

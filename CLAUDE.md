@@ -76,6 +76,7 @@ Expo SDK 57 (RN 0.86 / React 19.2) + `react-native-webview` 단일 화면 구조
 | `src/WebShell.tsx` | 웹뷰 본체. 네비게이션 정책·뒤로가기·오류 복구가 모두 여기 |
 | `src/components/ErrorView.tsx` | 로드 실패 재시도 화면 |
 | `eas.json` | 빌드/제출 프로파일 |
+| `plugins/` | 커스텀 config plugin. `app.config.ts`로 표현 못 하는 네이티브 변경(Podfile 변수 등)만 여기에 |
 
 ### 네비게이션 정책 (`WebShell.tsx`의 `handleShouldStartLoad`)
 

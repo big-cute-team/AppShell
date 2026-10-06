@@ -66,6 +66,13 @@
 > 2026-10-06: 1.1.0 빌드는 완료했지만 **제출 전에 Firebase(Google Ads iOS)를 얹어 1.1.1로 다시 빌드**하기로 함 — 심사를 한 번만 받기 위해.
 > 아래 1.1.0 항목은 기록용, 실제 제출은 1.1.1. 자산·문구는 그대로 쓴다.
 
+- [x] 1.1.1 `eas build --profile production --platform all` 시작 (2026-10-06 15:00)
+      - Android: https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/15ab77da-8268-43a8-9400-cddb05321550
+      - iOS: https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/30533b5a-cc2f-4fc1-be5a-6f13eb1e41bc
+      - **둘 다 FINISHED (2026-10-06 15:30)** — iOS 1.1.1 (5), Android 1.1.1 (versionCode 11)
+      - AAB 사본: `~/Desktop/해축이모-스토어-자산-2026-10/build/haechukimo-1.1.1-versionCode11.aab` (1.1.0은 `구버전_미제출/`)
+      - iOS 업로드: `npx eas-cli submit --platform ios --profile production --id 30533b5a-cc2f-4fc1-be5a-6f13eb1e41bc`
+
 
 - [x] `eas build --profile production --platform all` 시작 (2026-10-05, 버전 1.1.0, 빌드 번호는 EAS 자동)
       - Android: https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/2a75affd-f624-4995-bf33-3ee55a4e6a91

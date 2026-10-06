@@ -1,6 +1,6 @@
 # ADR-0005: Google Ads iOS 앱 캠페인을 위해 Firebase Analytics를 직접 붙인다 (MMP 미도입)
 
-- **상태**: Proposed (1.1.1 빌드·검증 후 Accepted로)
+- **상태**: Accepted (2026-10-06 — 로컬 iOS/Android 컴파일, 시뮬레이터 Analytics 초기화 확인, 1.1.1 EAS 빌드 완료)
 - **날짜**: 2026-10-06
 - **관련**: ADR-0004, `docs/todo/009-instagram-app-install-ads.md`, `docs/todo/010-haechukimo-rebrand.md`, PR #22
 

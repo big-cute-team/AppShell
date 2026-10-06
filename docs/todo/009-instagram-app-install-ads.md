@@ -119,8 +119,8 @@ iOS와 Android는 **캠페인을 따로** 만듭니다 (iOS 14+ 캠페인은 iOS
 - [x] iOS 링크 방식 확정 — SPM 기본값은 정적 링크와 충돌 → `disableSPM` + `useFrameworks: 'static'` + `forceStaticLinking`
       ([ADR-0005](../adr/0005-firebase-analytics-for-google-ads-ios.md)). AdSupport는 `plugins/withFirebaseAdSupport.js`
 - [x] Android 로컬 컴파일 확인 — 병합 매니페스트에 Firebase/measurement 항목 포함 (2026-10-06)
-- [ ] iOS 로컬 컴파일 확인 (Meta SDK·웹뷰와 공존)
-- [ ] 1.1.1 EAS 프로덕션 빌드
+- [x] iOS 로컬 컴파일 확인 (Meta SDK·웹뷰와 공존) — Release 시뮬레이터에서 `Analytics v.12.18.0 started`, `collection enabled` 로그 (2026-10-06)
+- [x] 1.1.1 EAS 프로덕션 빌드 — iOS (5), Android versionCode 11 (2026-10-06)
 
 ### Google 콘솔 (사람)
 - [ ] Firebase 프로젝트 → 프로젝트 설정 → 통합 → **Google Ads 연결** (광고 계정 선택)
@@ -128,6 +128,14 @@ iOS와 Android는 **캠페인을 따로** 만듭니다 (iOS 14+ 캠페인은 iOS
 - [ ] 1.1.1 배포 후 실기기에서 첫 실행 → Firebase 애널리틱스 "실시간"에 이벤트 확인
 - [ ] Google Ads 앱 캠페인 만들기에서 **iOS** 앱 선택이 되는지 확인
 - [ ] App Store 개인정보 영양 성분표에 Analytics 항목 추가 (Meta 추적 항목과 함께)
+- [x] GA4(`plick-6f560`) ↔ Google Ads(`119-323-2372`) 링크 생성 (2026-10-06). Ads 전환 화면의 "Google 애널리틱스"는
+      반영 전이라 비활성 → Android는 Google Play 소스로 먼저, iOS Firebase는 1.1.1 설치 후
+- [ ] Google Ads ↔ **Google Play 연결 승인** — Ads에서 Play를 데이터 소스로 고르면 "승인 대기"가 되고,
+      **Play Console → 설정 → 개발자 계정 → 연결된 서비스 → Google Ads에서 수락**해야 "+ 전환 만들기"에 Play가 뜬다.
+      승인 후 "다운로드(설치)" 전환 생성
+- [ ] (선택) **GA 속성 통합 여부 결정** — Firebase가 만든 `plick-6f560`(Default Account for Firebase)와 웹 GA4
+      `PLick 549220017`이 별개라 웹↔앱 크로스 플랫폼 분석이 안 됨. 합치려면 Firebase 설정 → 통합 → Google 애널리틱스에서
+      해제 후 PLick 속성으로 재연결. 쌓인 앱 데이터는 안 옮겨지므로 할 거면 배포 초기에. 광고 전환에는 영향 없음
 
 ## 참고
 

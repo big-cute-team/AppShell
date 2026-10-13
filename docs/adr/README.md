@@ -29,4 +29,5 @@
 | [0001](./0001-expo-managed-workflow-for-webview-shell.md) | 웹뷰 셸을 Expo + CNG로 구성 | Accepted | 2026-07-23 |
 | [0002](./0002-webview-navigation-policy.md) | 웹뷰 네비게이션 정책 (내부/외부/커스텀 스킴 분리) | Accepted | 2026-07-23 |
 | [0003](./0003-eas-build-and-remote-versioning.md) | EAS Build/Submit + 원격 버전 관리 | Accepted | 2026-07-23 |
-| [0004](./0004-meta-sdk-for-instagram-install-ads.md) | 인스타 앱 설치 광고용 Meta SDK 직접 연동 (MMP 미도입) | Proposed | 2026-09-27 |
+| [0004](./0004-meta-sdk-for-instagram-install-ads.md) | 인스타 앱 설치 광고용 Meta SDK 직접 연동 (MMP 미도입) | Accepted | 2026-09-27 |
+| [0005](./0005-firebase-analytics-for-google-ads-ios.md) | Google Ads iOS 앱 캠페인용 Firebase Analytics 직접 연동 (MMP 미도입) | Accepted | 2026-10-06 |

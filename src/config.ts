@@ -18,7 +18,7 @@ export const WEB_URL = process.env.EXPO_PUBLIC_WEB_URL ?? 'https://m.plick.co.kr
  *
  * 앞에 `.`을 붙이면 서브도메인까지 포함합니다(`.plick.app` → `www.plick.app` 허용).
  */
-/** 우리 서비스의 웹 호스트 — 웹뷰 배경을 다크(BACKGROUND_COLOR)로 칠해도 되는 곳. */
+/** 우리 서비스의 웹 호스트 — 웹뷰 배경을 BACKGROUND_COLOR로 칠하는 곳. */
 const OWN_HOSTS: string[] = [
   hostOf(WEB_URL),
   // .env로 WEB_URL을 로컬 주소로 덮어써도 프로덕션 도메인은 항상 앱 안에서 열립니다.
@@ -60,9 +60,12 @@ const APP_VERSION = Constants.expoConfig?.version;
  */
 export const USER_AGENT_SUFFIX = APP_VERSION ? `PlickApp/${APP_VERSION}` : 'PlickApp';
 
-/** 앱 배경색 — 웹의 다크 배경색과 동일 값. 스플래시/세이프에어리어/웹뷰 로딩 배경과
- * 맞춰 둡니다 (app.config.ts의 BACKGROUND_COLOR와 한 쌍으로 관리). */
-export const BACKGROUND_COLOR = '#0B0D12';
+/** 앱 배경색 — 웹(라이트 전용)의 `--plk-bg`와 동일 값. 스플래시/세이프에어리어/웹뷰 로딩
+ * 배경과 맞춰 둡니다 (app.config.ts의 BACKGROUND_COLOR와 한 쌍으로 관리). */
+export const BACKGROUND_COLOR = '#FFFFFF';
+
+/** 브랜드 강조색 — 웹 토큰 `--plk-accent`. 로딩 인디케이터·버튼에 씁니다. */
+export const ACCENT_COLOR = '#0A6B42';
 
 /** 당겨서 새로고침 허용 여부. 웹이 자체 스크롤 제스처를 쓰면 false로 두세요. */
 export const PULL_TO_REFRESH = true;
@@ -106,10 +109,11 @@ export function isInternalUrl(url: string): boolean {
 /**
  * 주어진 URL에 맞는 웹뷰 배경색.
  *
- * 우리 웹은 다크 테마라 배경을 다크로 깔아야 스크롤 바운스·당겨서 새로고침 때
- * 웹과 한 몸으로 보입니다. 반면 소셜 로그인 페이지는 흰 배경을 가정하고 body
- * 배경을 칠하지 않는 경우가 있어(카카오 2단계 인증 글자 안 보임 이슈), 다크 배경이
- * 그대로 비치면 진한 글자가 묻힙니다 — 그래서 우리 호스트가 아니면 흰색을 씁니다.
+ * 우리 호스트에서는 BACKGROUND_COLOR를 깔아야 스크롤 바운스·당겨서 새로고침 때
+ * 웹과 한 몸으로 보입니다. 소셜 로그인 페이지는 흰 배경을 가정하고 body 배경을
+ * 칠하지 않는 경우가 있어(카카오 2단계 인증 글자 안 보임 이슈) 항상 흰색을 씁니다.
+ * 지금은 웹이 라이트 전용이라 두 값이 같지만, 웹이 다시 다크 배경을 쓰게 되면
+ * BACKGROUND_COLOR만 바꾸면 되도록 분기를 남겨 둡니다.
  *
  * about:blank처럼 호스트를 판별할 수 없는 URL은 null — 현재 배경을 유지하세요.
  */

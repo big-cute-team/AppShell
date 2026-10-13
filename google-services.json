@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "597387319292",
+    "project_id": "plick-6f560",
+    "storage_bucket": "plick-6f560.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597387319292:android:0246c7fc381f16f1704479",
+        "android_client_info": {
+          "package_name": "kr.co.plick.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtM8S19oFxgmEGr-YZWh7beKrSNo1ho2w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

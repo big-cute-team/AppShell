@@ -1,6 +1,6 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { BACKGROUND_COLOR } from '../config';
+import { ACCENT_COLOR, BACKGROUND_COLOR } from '../config';
 
 type Props = {
   /** 네트워크 자체가 끊긴 경우와 서버/페이지 오류를 구분해 안내합니다. */
@@ -28,7 +28,7 @@ export function ErrorView({ offline, retrying, onRetry }: Props) {
         onPress={onRetry}
         style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}>
         {retrying ? (
-          <ActivityIndicator color="#111111" />
+          <ActivityIndicator color="#FFFFFF" />
         ) : (
           <Text style={styles.buttonLabel}>다시 시도</Text>
         )}
@@ -48,14 +48,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#16181B', // 웹 토큰 --plk-text-strong
     textAlign: 'center',
   },
   description: {
     marginTop: 8,
     fontSize: 14,
     lineHeight: 20,
-    color: '#9BA1AC',
+    color: '#5F6368', // 웹 토큰 --plk-text-3
     textAlign: 'center',
   },
   button: {
@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
-    backgroundColor: '#FFFFFF',
+    borderRadius: 14, // 웹 토큰 radius.control
+    backgroundColor: ACCENT_COLOR,
   },
   buttonPressed: {
     opacity: 0.7,
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#111111',
+    color: '#FFFFFF',
   },
 });

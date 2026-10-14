@@ -15,7 +15,7 @@ WKWebView는 meta를 그대로 따름) 웹이 바꾸는 순간 앱에서 핀치�
 - [x] `src/config.ts` `BLOCK_PAGE_ZOOM` 스위치
 - [x] Android: `setBuiltInZoomControls={false}` (핀치·더블탭 모두 내장 줌 메커니즘)
 - [x] iOS: 로드 후 viewport meta를 `maximum-scale=1, user-scalable=no`로 고정하는 주입 스크립트 + MutationObserver
-- [x] 1.2.0 빌드에 포함 (011과 같은 빌드)
+- [x] 1.2.0 빌드에 포함 (011과 같은 빌드, iOS 7 / Android 13 — 2026-10-14 양쪽 심사 제출)
 
 ## 2. 확인
 

@@ -6,6 +6,7 @@
 ## 관측
 
 - [ ] 크래시 리포팅 도입 검토 — Sentry(`@sentry/react-native`, Expo config plugin 제공)
+- [ ] Play Console "가독화 파일(R8 mapping) 없음" 경고 해소 — EAS 빌드가 mapping.txt를 올리게 하거나 수동 업로드. 매 출시마다 경고가 뜸(1.1.1·1.2.0)
       또는 Firebase Crashlytics
 - [ ] 웹뷰 로드 실패율 수집 — `WebShell.tsx`의 `onError` / `showError`에 이벤트 전송 추가
 - [ ] 앱 버전별 사용자 분포 확인 경로 (스토어 콘솔로 충분한지)

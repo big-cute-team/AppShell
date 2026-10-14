@@ -23,12 +23,43 @@ import { requestTrackingPermission } from './tracking';
 import {
   ACCENT_COLOR,
   BACKGROUND_COLOR,
+  BLOCK_PAGE_ZOOM,
   PULL_TO_REFRESH,
   USER_AGENT_SUFFIX,
   WEB_URL,
   isInternalUrl,
   pageBackgroundColor,
 } from './config';
+
+/**
+ * iOS용 확대 차단 (BLOCK_PAGE_ZOOM). WKWebView는 Safari와 달리 meta viewport의 `user-scalable=no`를
+ * 그대로 따르므로, 문서 시작 시점부터 viewport meta를 확대 불가 값으로 고정합니다.
+ * 페이지가 나중에 파싱하는 meta나 Next.js가 라우트 이동 때 갱신하는 meta도 MutationObserver가 따라가며
+ * 모든 viewport meta에 같은 값을 씁니다(WebKit은 마지막 meta를 쓰므로 하나만 고치면 안 됩니다).
+ * Android는 네이티브 설정(`setBuiltInZoomControls={false}`)으로 막으므로 이 스크립트를 쓰지 않습니다.
+ */
+const LOCK_VIEWPORT_SCALE_JS = `(function () {
+  var CONTENT = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
+  function pin() {
+    var head = document.head;
+    if (!head) return;
+    var metas = head.querySelectorAll('meta[name="viewport"]');
+    if (metas.length === 0) {
+      var meta = document.createElement('meta');
+      meta.setAttribute('name', 'viewport');
+      meta.setAttribute('content', CONTENT);
+      head.appendChild(meta);
+      return;
+    }
+    for (var i = 0; i < metas.length; i++) {
+      if (metas[i].getAttribute('content') !== CONTENT) metas[i].setAttribute('content', CONTENT);
+    }
+  }
+  new MutationObserver(pin).observe(document.documentElement, {
+    childList: true, subtree: true, attributes: true, attributeFilter: ['content'],
+  });
+  pin();
+})(); true;`;
 
 /** 웹뷰가 아니라 OS가 처리해야 하는 스킴들 (전화·메일·문자·스토어·카카오/토스 등 앱 링크). */
 const EXTERNAL_SCHEME = /^(?!https?:)([a-z][a-z0-9+.-]*):/i;
@@ -192,6 +223,12 @@ export function WebShell() {
           originWhitelist={['https://*', 'http://*']}
           // 웹 폰트 크기가 OS 설정에 휘둘리지 않도록 고정합니다.
           textZoom={100}
+          // 앱 안 핀치·더블탭 확대 차단 (src/config.ts BLOCK_PAGE_ZOOM 참고).
+          // Android: 내장 줌 메커니즘(핀치·더블탭)을 끕니다. iOS: 위 LOCK_VIEWPORT_SCALE_JS.
+          setBuiltInZoomControls={!BLOCK_PAGE_ZOOM}
+          injectedJavaScriptBeforeContentLoaded={
+            BLOCK_PAGE_ZOOM && Platform.OS === 'ios' ? LOCK_VIEWPORT_SCALE_JS : undefined
+          }
           overScrollMode="never"
           startInLoadingState={false}
         />

@@ -27,7 +27,7 @@ iOS 실기기용 크리덴셜은 Apple Developer 가입 후 첫 preview iOS 빌�
 | 008 | [세이프 에어리어·상태바 시각 정리](./008-safe-area-visuals.md) | 다크 배경·상태바·소셜 로그인 배경 전환 반영됨. 크롬 비교·실기기 확인 남음 | 🟡 진행 중 |
 | 009 | [인스타그램 앱 설치 광고](./009-instagram-app-install-ads.md) | 셸 Meta SDK·ATT 연동 완료(10/5). Meta 콘솔·스토어 양식·새 캠페인 남음 | 🟡 진행 중 |
 | 010 | [해축이모 리브랜딩](./010-haechukimo-rebrand.md) | 이름·아이콘·라이트 배경 셸 반영 완료. 스토어 등록정보 교체와 1.1.0 제출 남음 | 🔴 지금 처리 |
-| 011 | [앱 안 애드센스 — WebView를 GMA SDK에 등록](./011-adsense-in-app-webview-registration.md) | 1.2.0 양쪽 스토어 심사 제출(10/14). 심사 통과 후 KAN-654 댓글·개인정보 라벨 확인 남음 | 🟡 심사 대기 |
+| 011 | [앱 안 애드센스 — WebView를 GMA SDK에 등록](./011-adsense-in-app-webview-registration.md) | 1.2.0 양쪽 스토어 심사 제출(10/14). KAN-654 댓글 완료. 심사 통과 후 개인정보 라벨 확인 남음 | 🟡 심사 대기 |
 | 012 | [앱 안 확대 차단을 셸로 이전](./012-block-page-zoom-in-shell.md) | 1.2.0에 포함돼 심사 제출(10/14). 웹 KAN-626 머지 뒤 실기기 확인 남음 | 🟡 심사 대기 |
 
 범례 — 🔴 지금 처리 / 🟡 배포 전 처리 / ⚪ 순서상 대기

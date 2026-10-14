@@ -12,7 +12,7 @@ const APP_SCHEME = 'plick';
 const BUNDLE_ID = 'kr.co.plick.app';
 
 /** 스토어에 노출되는 사용자용 버전. */
-const VERSION = '1.1.1';
+const VERSION = '1.2.0';
 
 /** 앱 배경색 — 스플래시 배경, 상태바 뒤 영역, 웹뷰 로딩 배경에 함께 쓰입니다.
  * 웹(해축이모, 라이트 전용)의 `--plk-bg`와 동일하게 유지하세요
@@ -41,6 +41,14 @@ const META_CLIENT_TOKEN = '7657fe35b18fb878040e0e24528fd304';
  */
 const FIREBASE_IOS_CONFIG = './GoogleService-Info.plist';
 const FIREBASE_ANDROID_CONFIG = './google-services.json';
+
+/**
+ * Google Mobile Ads SDK — 앱 안 애드센스 광고를 허용하기 위한 "WebView API for Ads" 전용 (ADR-0006, docs/todo/011).
+ * 광고 유닛을 직접 띄우지 않고 WebView 등록에만 쓰므로 AdMob 앱 ID 없이 `webview` 통합 모드로 둡니다.
+ * iOS pod은 아래 expo-build-properties `extraPods`, Android 의존성·매니페스트는 plugins/withGoogleMobileAdsWebView.js.
+ * 버전 출처: https://developers.google.com/admob/ios/rel-notes (Android는 플러그인 파일 상단).
+ */
+const GOOGLE_MOBILE_ADS_IOS_POD_VERSION = '~> 13.11';
 
 /** iOS ATT(앱 추적 투명성) 팝업 문구. 거부해도 앱은 정상 동작합니다. */
 const TRACKING_PERMISSION_TEXT =
@@ -91,6 +99,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       NSMicrophoneUsageDescription:
         '동영상 촬영 시 마이크 접근 권한이 필요합니다.',
       ITSAppUsesNonExemptEncryption: false,
+      // Google Mobile Ads SDK를 WebView 등록 전용으로 쓴다는 선언. 없으면 GADApplicationIdentifier가 없다고
+      // 앱 기동 시 예외가 납니다. https://developers.google.com/admob/ios/webview/api-for-ads
+      GADIntegrationManager: 'webview',
       // 광고 네트워크별 iOS 설치 귀속(SKAdNetwork). 각 SDK 플러그인이 넣어 주지 않으므로 직접 등록합니다.
       // - Meta: https://developers.facebook.com/docs/SKAdNetwork (Facebook / Instagram)
       // - Google Ads: https://support.google.com/google-ads/answer/10005960
@@ -155,6 +166,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     '@react-native-firebase/analytics',
     // IDFA 링크(AdSupport) — 없으면 ATT를 허용받아도 Google Ads 설치 귀속에 식별자가 안 쓰입니다.
     './plugins/withFirebaseAdSupport.js',
+    // Google Mobile Ads SDK(Android) — play-services-ads 의존성과 INTEGRATION_MANAGER=webview 메타데이터.
+    './plugins/withGoogleMobileAdsWebView.js',
     [
       'expo-build-properties',
       {
@@ -167,6 +180,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           // Expo 57의 사전 컴파일 모듈 모드는 대부분의 pod에서 프레임워크 링크를 끄는데,
           // react-native-firebase pod은 정적 프레임워크로 남겨야 합니다 (rnfirebase.io Expo 안내).
           forceStaticLinking: ['RNFBApp', 'RNFBAnalytics'],
+          // Google Mobile Ads SDK(iOS). react-native-webview 패치가 런타임에 GADMobileAds 클래스를 찾아 쓰므로
+          // 앱이 pod을 직접 넣어야 합니다 (위 GOOGLE_MOBILE_ADS_IOS_POD_VERSION 주석 참고).
+          extraPods: [{ name: 'Google-Mobile-Ads-SDK', version: GOOGLE_MOBILE_ADS_IOS_POD_VERSION }],
         },
         android: {
           // 기본은 HTTPS 전용. 로컬 개발 웹을 붙일 때만 `.env`의

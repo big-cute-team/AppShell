@@ -174,6 +174,11 @@ export function WebShell() {
           webviewDebuggingEnabled={__DEV__}
           allowsBackForwardNavigationGestures
           pullToRefreshEnabled={PULL_TO_REFRESH}
+          // 앱 안 애드센스 광고 허용 — 네이티브 WebView를 Google Mobile Ads SDK에 등록합니다
+          // (WebView API for Ads). react-native-webview에는 아직 없는 prop이라
+          // patches/react-native-webview+13.16.1.patch 로 넣었습니다 (ADR-0006).
+          // 등록은 네이티브 WebView 생성 직후 일어나므로 첫 페이지 로드보다 앞섭니다.
+          googleMobileAdsWebViewRegistrationEnabled
           // 로그인 세션이 앱 재실행 후에도 유지되도록 쿠키를 공유합니다.
           sharedCookiesEnabled
           thirdPartyCookiesEnabled

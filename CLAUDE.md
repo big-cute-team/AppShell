@@ -63,6 +63,8 @@ Expo SDK 57 (RN 0.86 / React 19.2) + `react-native-webview` 단일 화면 구조
 - **`EXPO_PUBLIC_*`에 비밀값을 넣지 마세요.** 이 값들은 JS 번들에 평문으로 인라인됩니다.
 - **네이티브 의존성을 `npm install`로 추가하지 마세요.** `npx expo install <pkg>`를 쓰면
   SDK 57과 호환되는 버전이 선택됩니다.
+- **`node_modules`를 직접 고치고 끝내지 마세요.** 서드파티 네이티브 코드를 손봐야 하면 `patches/`에
+  `npx patch-package <pkg>`로 패치를 떠야 EAS 빌드에도 반영됩니다. 해당 패키지 버전을 올릴 때는 패치를 다시 뜹니다.
 - **버전 번호를 손으로 올리지 마세요.** `eas.json`이 `appVersionSource: "remote"`라
   iOS `buildNumber` / Android `versionCode`는 EAS가 관리합니다.
   사용자용 버전(`app.config.ts`의 `VERSION`)만 사람이 정합니다.
@@ -77,6 +79,7 @@ Expo SDK 57 (RN 0.86 / React 19.2) + `react-native-webview` 단일 화면 구조
 | `src/components/ErrorView.tsx` | 로드 실패 재시도 화면 |
 | `eas.json` | 빌드/제출 프로파일 |
 | `plugins/` | 커스텀 config plugin. `app.config.ts`로 표현 못 하는 네이티브 변경(Podfile 변수 등)만 여기에 |
+| `patches/` | `patch-package` 패치. `npm install` 뒤 `postinstall`로 자동 적용. 현재 `react-native-webview`에 GMA WebView 등록 prop(ADR-0006) |
 
 ### 네비게이션 정책 (`WebShell.tsx`의 `handleShouldStartLoad`)
 

@@ -13,7 +13,8 @@
     "build:dev": "eas build --profile development --platform all",
     "build:preview": "eas build --profile preview --platform all",
     "build:prod": "eas build --profile production --platform all",
-    "submit:prod": "eas submit --profile production --platform all"
+    "submit:prod": "eas submit --profile production --platform all",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@react-native-firebase/analytics": "^26.4.0",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "patch-package": "^8.0.1",
     "typescript": "~6.0.3"
   }
 }

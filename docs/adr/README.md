@@ -31,3 +31,4 @@
 | [0003](./0003-eas-build-and-remote-versioning.md) | EAS Build/Submit + 원격 버전 관리 | Accepted | 2026-07-23 |
 | [0004](./0004-meta-sdk-for-instagram-install-ads.md) | 인스타 앱 설치 광고용 Meta SDK 직접 연동 (MMP 미도입) | Accepted | 2026-09-27 |
 | [0005](./0005-firebase-analytics-for-google-ads-ios.md) | Google Ads iOS 앱 캠페인용 Firebase Analytics 직접 연동 (MMP 미도입) | Accepted | 2026-10-06 |
+| [0006](./0006-gma-webview-registration-via-webview-patch.md) | 앱 안 애드센스 광고용 WebView → Google Mobile Ads SDK 등록 (react-native-webview 패치) | Accepted | 2026-10-14 |

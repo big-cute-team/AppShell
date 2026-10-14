@@ -62,6 +62,8 @@ npm run doctor   # npx expo-doctor
 ```
 app.config.ts          앱 이름·번들 ID·아이콘·권한·스플래시 등 모든 앱 메타데이터
 eas.json               EAS Build/Submit 프로파일 (development / preview / production)
+plugins/               커스텀 config plugin (app.config.ts로 표현 못 하는 네이티브 변경)
+patches/               patch-package 패치 — npm install 뒤 postinstall로 자동 적용
 .env.example           EXPO_PUBLIC_WEB_URL 템플릿
 index.ts               진입점 (registerRootComponent)
 App.tsx                SafeAreaProvider + 스플래시 유지
@@ -235,6 +237,16 @@ npm run doctor         # 프로젝트 환경 점검
 
 **네이티브 설정을 바꿨는데 반영되지 않음**
 `npm run prebuild` 로 네이티브 프로젝트를 재생성한 뒤 다시 빌드하세요.
+
+**`pod install` 실패 — `Unicode Normalization not appropriate for ASCII-8BIT (Encoding::CompatibilityError)`**
+셸 로케일이 비어 있어서입니다(비대화형 셸, 일부 터미널). UTF-8 로케일을 주고 다시 돌리세요.
+```bash
+LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 npx pod-install
+```
+
+**Android 빌드 실패 — `Module was compiled with an incompatible version of Kotlin`**
+네이티브 의존성이 RN보다 새 Kotlin으로 컴파일된 경우입니다(RN 0.86은 Kotlin 2.1.20, 메타데이터 2.2까지 읽음).
+그 라이브러리의 버전을 내리세요. `play-services-ads`는 `plugins/withGoogleMobileAdsWebView.js`에 핀이 있습니다.
 
 **Android 빌드 실패 — `:expo-modules-core:configureCMakeDebug[...] FAILED`**
 ```

@@ -70,6 +70,14 @@ export const ACCENT_COLOR = '#0A6B42';
 /** 당겨서 새로고침 허용 여부. 웹이 자체 스크롤 제스처를 쓰면 false로 두세요. */
 export const PULL_TO_REFRESH = true;
 
+/**
+ * 앱 안에서 핀치·더블탭 확대를 막을지. 웹은 접근성(WCAG 1.4.4, KAN-626) 때문에 meta viewport의
+ * `maximum-scale=1, user-scalable=no`를 걷어내지만, 앱에서는 릴스 스와이프·시트 드래그가 더블탭 확대에
+ * 깨지지 않도록 셸이 대신 막습니다. 저시력 사용자는 OS 확대(iOS 손쉬운 사용 → 확대/축소)로 대응합니다.
+ * false로 두면 웹의 viewport 설정을 그대로 따릅니다.
+ */
+export const BLOCK_PAGE_ZOOM = true;
+
 function hostOf(url: string): string {
   try {
     return new URL(url).host;

@@ -1,6 +1,7 @@
 # 011. 앱 안 애드센스 광고 — WebView를 Google Mobile Ads SDK에 등록
 
-**상태: 🟡 진행 중** — 셸 코드는 2026-10-14 반영([ADR-0006](../adr/0006-gma-webview-registration-via-webview-patch.md)).
+**상태: 🟡 진행 중** — 셸 코드 반영·1.2.0 양쪽 스토어 심사 제출 완료(2026-10-14, [ADR-0006](../adr/0006-gma-webview-registration-via-webview-patch.md)).
+KAN-654 댓글 완료. 심사 통과 후 개인정보 라벨 확인·alpha 트랙 갱신이 남음.
 Jira [KAN-655](https://whoru3918.atlassian.net/browse/KAN-655) (KAN-652 후속). 프론트 쪽 스위치는 KAN-654.
 
 ## 왜 필요한가
@@ -25,13 +26,22 @@ WebView를 등록했을 때만 허용된다. 등록 없이 노출하면 계정 �
       `#api-for-ads-tests` 섹션)
 - [x] Android 개발 빌드에서 같은 확인 (2026-10-14, Medium_Phone 에뮬레이터)
 - [ ] 회귀: 소셜 로그인 리다이렉트(카카오·구글·애플), 뒤로 가기, 외부 링크 인앱 브라우저, 렌더러 죽음 복구
-- [ ] EAS 이미지의 Xcode가 26.2 이상인지 (GMA iOS 13.x 요구). 아니면 `GOOGLE_MOBILE_ADS_IOS_POD_VERSION`을 낮춘다
+- [x] EAS 이미지의 Xcode가 26.2 이상인지 — EAS 프로덕션 iOS 빌드 성공으로 확인 (2026-10-14)
 
 ## 3. 배포
 
-- [ ] `npm run build:prod` → 두 스토어 심사 제출 (버전 1.2.0)
-- [ ] KAN-654에 댓글: "앱 셸 등록 버전 = 1.2.0 이상" — 프론트 `resolveAdsMode`의 문턱 값
-- [ ] App Store 개인정보: GMA SDK가 들어가므로 "광고 데이터" 항목 재확인
+- [x] `eas build --profile production --platform all` (2026-10-14, main f87eae5 — 011 + 012 포함)
+      - iOS 1.2.0 (7): https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/98576415-16f9-411e-be94-31b7413a02a3
+      - Android 1.2.0 (versionCode 13): https://expo.dev/accounts/kimdowan1004s-team/projects/plick/builds/88488a3b-0391-4568-ae22-2b3d34857a96
+      - AAB 사본: `~/Desktop/해축이모-스토어-자산-2026-10/build/haechukimo-1.2.0-versionCode13.aab`
+      - 먼저 올렸다가 취소한 빌드(iOS 6 완료·Android 12 취소)는 012 미포함이라 제출하지 않음
+- [x] iOS: `eas submit --id 98576415…` → App Store Connect 1.2.0에 빌드 (7) 연결, 업그레이드 사항 "안정성 및 성능 개선",
+      프로모션 텍스트 추가, 심사 메모를 1.2.0 기준(GMA SDK는 WebView 등록 전용, 광고 없음)으로 교체 → **심사 대기 중 (2026-10-14)**
+- [x] Android: AAB 수동 업로드 → 프로덕션 13 (1.2.0) → **검토 제출 완료 (2026-10-14)**.
+      AD_ID 오류는 1.1.1 때와 같이 옛 alpha 번들 탓 → "권한 없이 출시". 가독화 파일 없음 경고는 무시(007에 기록)
+- [ ] 심사 통과 뒤 alpha 트랙에도 1.2.0 번들을 올려 두기 — 다음 출시부터 AD_ID 오류가 안 뜨게
+- [x] KAN-654에 댓글: "앱 셸 등록 버전 = 1.2.0 이상" — 프론트 `resolveAdsMode`의 문턱 값 (2026-10-14, 댓글 10357)
+- [ ] App Store 개인정보(앱이 수집하는 개인정보): GMA SDK가 들어가므로 "광고 데이터" 항목 재확인 — 심사와 무관하게 즉시 반영됨
       (SDK는 등록 전용이고 광고 유닛은 안 띄우지만, SDK 자체가 기기 식별자를 다룬다)
 - [ ] Play 데이터 보안: 광고 ID 공유는 Meta 때문에 이미 "사용함". 변경 필요 여부만 확인
 
